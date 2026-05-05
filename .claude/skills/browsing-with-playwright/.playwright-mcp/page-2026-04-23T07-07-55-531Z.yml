@@ -1,0 +1,6 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e8]: account_balance
+    - generic [ref=e9]: Financial Architect
+  - heading "Sign In" [level=1] [ref=e10]
+  - paragraph [ref=e11]: Welcome back to your financial dashboard

@@ -1,0 +1,178 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - heading "Finance Architect" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Enterprise Tier
+    - navigation [ref=e8]:
+      - link "dashboard Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e10]: dashboard
+        - generic [ref=e11]: Dashboard
+      - link "receipt_long Transactions" [ref=e12] [cursor=pointer]:
+        - /url: /transactions
+        - generic [ref=e13]: receipt_long
+        - generic [ref=e14]: Transactions
+      - link "sync Recurring" [ref=e15] [cursor=pointer]:
+        - /url: /recurring
+        - generic [ref=e16]: sync
+        - generic [ref=e17]: Recurring
+      - link "account_balance_wallet Budgets" [ref=e18] [cursor=pointer]:
+        - /url: /budgets
+        - generic [ref=e19]: account_balance_wallet
+        - generic [ref=e20]: Budgets
+      - link "bar_chart Reports" [ref=e21] [cursor=pointer]:
+        - /url: /reports
+        - generic [ref=e22]: bar_chart
+        - generic [ref=e23]: Reports
+      - link "group Team" [ref=e24] [cursor=pointer]:
+        - /url: /team
+        - generic [ref=e25]: group
+        - generic [ref=e26]: Team
+      - link "settings Settings" [ref=e27] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e28]: settings
+        - generic [ref=e29]: Settings
+    - generic [ref=e30]:
+      - button "add Add Transaction" [ref=e31] [cursor=pointer]:
+        - generic [ref=e32]: add
+        - text: Add Transaction
+      - generic [ref=e34]:
+        - generic [ref=e35]: FA
+        - generic [ref=e36]:
+          - paragraph [ref=e37]: Main Office
+          - paragraph [ref=e38]: HQ Terminal
+  - main [ref=e39]:
+    - generic [ref=e40]:
+      - generic [ref=e42]:
+        - generic [ref=e43]: search
+        - textbox "Search architecture..." [ref=e44]
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - button "sensors Live Status" [ref=e47] [cursor=pointer]:
+            - generic [ref=e48]: sensors
+            - generic [ref=e49]: Live Status
+          - button "notifications" [ref=e50] [cursor=pointer]:
+            - generic [ref=e51]: notifications
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - paragraph [ref=e55]: Alex Chen
+            - paragraph [ref=e56]: Lead Architect
+          - img "User Profile" [ref=e57]
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - text: Analytics Suite
+          - heading "Fiscal Performance" [level=1] [ref=e61]
+          - paragraph [ref=e62]: Comprehensive analysis of spending patterns and budget variance for the current fiscal period.
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - button "Q3 2023" [ref=e65] [cursor=pointer]
+            - button "Custom Range" [ref=e66] [cursor=pointer]
+          - generic [ref=e67]:
+            - button "picture_as_pdf PDF" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]: picture_as_pdf
+              - text: PDF
+            - button "description CSV" [ref=e70] [cursor=pointer]:
+              - generic [ref=e71]: description
+              - text: CSV
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: Time Series
+              - heading "Spending Trends" [level=3] [ref=e78]
+            - generic [ref=e79]:
+              - generic [ref=e80]: $142,850.00
+              - generic [ref=e81]: Total Gross Outflow
+          - generic [ref=e83]:
+            - generic [ref=e85]: bar_chart
+            - heading "No spending data for this period" [level=4] [ref=e86]
+            - paragraph [ref=e87]: Try selecting a different date range or add your first transaction.
+            - button "add Add Transaction" [ref=e88] [cursor=pointer]:
+              - generic [ref=e89]: add
+              - text: Add Transaction
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: Distribution
+            - heading "Category" [level=3] [ref=e93]
+          - generic [ref=e94]:
+            - img [ref=e95]
+            - generic [ref=e100]:
+              - generic [ref=e101]: Total
+              - generic [ref=e102]: 100%
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e107]: Operations
+              - generic [ref=e108]: 72%
+            - generic [ref=e109]:
+              - generic [ref=e112]: Payroll
+              - generic [ref=e113]: 18%
+            - generic [ref=e114]:
+              - generic [ref=e117]: Marketing
+              - generic [ref=e118]: 10%
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - heading "Period Comparison (MoM)" [level=3] [ref=e121]
+            - generic [ref=e122]:
+              - generic [ref=e123]: Current
+              - generic [ref=e125]: Previous
+          - table [ref=e128]:
+            - rowgroup [ref=e129]:
+              - row "Department May Actual June Actual Variance ($) Trend" [ref=e130]:
+                - columnheader "Department" [ref=e131]
+                - columnheader "May Actual" [ref=e132]
+                - columnheader "June Actual" [ref=e133]
+                - columnheader "Variance ($)" [ref=e134]
+                - columnheader "Trend" [ref=e135]
+            - rowgroup [ref=e136]:
+              - row "Engineering & DevOps $45,200.00 $48,750.00 +$3,550.00 north 7.8%" [ref=e137]:
+                - cell "Engineering & DevOps" [ref=e138]
+                - cell "$45,200.00" [ref=e139]
+                - cell "$48,750.00" [ref=e140]
+                - cell "+$3,550.00" [ref=e141]
+                - cell "north 7.8%" [ref=e142]:
+                  - generic [ref=e143]:
+                    - generic [ref=e144]: north
+                    - text: 7.8%
+              - row "Sales & Marketing $12,800.00 $11,200.00 -$1,600.00 south 12.5%" [ref=e145]:
+                - cell "Sales & Marketing" [ref=e146]
+                - cell "$12,800.00" [ref=e147]
+                - cell "$11,200.00" [ref=e148]
+                - cell "-$1,600.00" [ref=e149]
+                - cell "south 12.5%" [ref=e150]:
+                  - generic [ref=e151]:
+                    - generic [ref=e152]: south
+                    - text: 12.5%
+              - row "Infrastructure $33,450.00 $32,100.00 -$1,350.00 south 4.1%" [ref=e153]:
+                - cell "Infrastructure" [ref=e154]
+                - cell "$33,450.00" [ref=e155]
+                - cell "$32,100.00" [ref=e156]
+                - cell "-$1,350.00" [ref=e157]
+                - cell "south 4.1%" [ref=e158]:
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: south
+                    - text: 4.1%
+              - row "Executive Payroll $22,000.00 $22,000.00 $0.00 Flat" [ref=e161]:
+                - cell "Executive Payroll" [ref=e162]
+                - cell "$22,000.00" [ref=e163]
+                - cell "$22,000.00" [ref=e164]
+                - cell "$0.00" [ref=e165]
+                - cell "Flat" [ref=e166]:
+                  - generic [ref=e167]: Flat
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - generic [ref=e170]: verified_user
+            - generic [ref=e171]: Audited Fiscal Data
+          - generic [ref=e172]: "Updated: 2023-06-30 23:59:59 UTC"
+      - generic [ref=e173]:
+        - paragraph [ref=e174]: © 2024 FINANCE ARCHITECT • CORE ENGINE V4.2
+        - generic [ref=e175]:
+          - link "PRIVACY POLICY" [ref=e176] [cursor=pointer]:
+            - /url: "#"
+          - link "COMPLIANCE HUB" [ref=e177] [cursor=pointer]:
+            - /url: "#"
+          - link "AUDIT LOGS" [ref=e178] [cursor=pointer]:
+            - /url: "#"
+          - link "SUPPORT TERMINAL" [ref=e179] [cursor=pointer]:
+            - /url: "#"
+          - generic [ref=e182]: Version 4.0.2-Stable
