@@ -1,141 +1,98 @@
-# DevDocs AI - Claude Code Instructions
+# CLAUDE.md — DevDocs AI Agent Rules
 
-## Project Overview
-DevDocs AI is an AI-powered pre-build planning assistant that interviews developers before they start coding and generates a complete documentation bundle (10 structured markdown files) optimized for AI coding agents like Claude Code, Cursor, and Windsurf.
+You are an AI coding agent working on **DevDocs AI** — a conversational, AI-powered pre-build
+planning assistant for developers. Before writing a single line of code, read this file in full,
+then read `memory/constitution.md` and `specs/001-devdocs-ai-mvp/plan.md`.
 
-## Key Context
-- **Target Users**: Junior and mid-level developers, solo founders, bootcamp graduates
-- **Core Problem**: Missing or incomplete project planning causes expensive rework when using AI coding tools
-- **Solution**: Conversational AI interview that surfaces all architectural decisions upfront
-- **Business Model**: BYOK (Bring Your Own Key) free tier → $12/month Pro → $35/seat Team
+---
 
-## Tech Stack
-- **Frontend**: Next.js 14 (App Router), React, TypeScript
-- **UI**: shadcn/ui + Tailwind CSS
-- **Database**: Supabase (PostgreSQL with RLS)
-- **Authentication**: Supabase Auth (email + Google OAuth)
-- **AI**: Anthropic SDK (client-side, BYOK model with claude-sonnet-4-6)
-- **Hosting**: Vercel
-- **Testing**: Vitest (unit), Playwright (E2E)
-- **Monitoring**: Sentry (errors), PostHog (analytics)
+## Project Identity
 
-## Architecture Decisions
+**DevDocs AI** interviews developers before they start building, surfaces every critical
+architectural and technical decision, and generates a 10-file structured markdown documentation
+bundle that can be fed directly into AI coding agents (Claude Code, Cursor, Windsurf).
 
-### ADR-001: BYOK (Bring Your Own Key) Model
-Users supply their own Anthropic API key. All AI calls are made client-side directly to Anthropic API. Keys stored in browser localStorage only, never transmitted to our servers. This eliminates API costs during validation phase.
+- **Stack**: Next.js 14 (App Router), shadcn/ui, Tailwind CSS, Supabase, Vercel
+- **AI model**: `claude-sonnet-4-6` via Anthropic SDK (BYOK, client-side only)
+- **MVP timeline**: 4–6 weeks across 4 phases
 
-### ADR-002: Client-Side AI Processing
-All interview logic and documentation generation happens in the browser using the Anthropic SDK. The system prompt is served from a server function but execution is client-side.
+---
 
-### ADR-003: Supabase for Everything
-Using Supabase for PostgreSQL database, authentication, and row-level security. This eliminates the need for custom auth logic and provides built-in security at the database layer.
+## Absolute Rules (Never Violate)
 
-## Project Structure
-```
-/app                    # Next.js App Router pages
-  /api                  # Server-side API routes
-  /(auth)              # Authentication pages
-  /(app)               # Main application pages
-/components            # React components
-  /ui                  # shadcn/ui components
-/lib                   # Utility functions
-  /ai                  # Anthropic SDK integration
-  /supabase           # Supabase client
-/public               # Static assets
-/.specify             # Spec-driven development artifacts
-  /specs              # Feature specifications
-  /memory             # Project memory and constitution
-```
+1. **BYOK security** — User API keys live ONLY in browser `localStorage`. Never send them to any
+   DevDocs AI server endpoint. Never log them. All Anthropic SDK calls are client-side only.
+2. **System prompt is server-side only** — `DEVDOCS_SYSTEM_PROMPT` env var is read server-side and
+   injected per session. It is NEVER exposed in the client bundle or any API response.
+3. **No secrets in code** — all secrets use Vercel encrypted environment variables. Never hardcode.
+4. **RLS on every table** — every Supabase table has Row Level Security. Users can only read/write
+   their own data. Test this with direct Supabase queries, not just application-layer guards.
+5. **Soft deletes only** — use `deleted_at` timestamp. Never `DELETE` user data without an explicit
+   user-initiated purge action.
+6. **Scope lock** — implement only what is defined in `specs/001-devdocs-ai-mvp/spec.md`. New ideas
+   go in BACKLOG.md. Do not implement them during MVP build.
+7. **AI output quality gate** — no code that calls the Anthropic API may be merged unless the
+   current `DEVDOCS_SYSTEM_PROMPT` passes all 5 archetype graders in `tests/prompts/`. A working
+   interview UI backed by a failing or incomplete system prompt is not a shippable increment. If
+   you cannot run the graders, block the PR and flag for human review. Output quality is a
+   first-class correctness concern, not a polish concern.
 
-## Development Guidelines
+---
 
-### When Writing Code
-1. **Read before writing** - Always check existing patterns and conventions
-2. **Type safety** - Use TypeScript strict mode, no `any` types
-3. **Security first** - Never expose API keys, always use RLS policies
-4. **Test coverage** - Write tests for all utility functions and critical paths
-5. **Accessibility** - All interactive elements must be keyboard accessible
+## General Practices
 
-### File Naming Conventions
-- Components: PascalCase (e.g., `InterviewChat.tsx`)
-- Utilities: camelCase (e.g., `formatMarkdown.ts`)
-- Pages: kebab-case (e.g., `project-dashboard`)
-- Types: PascalCase with `.types.ts` suffix
+- Prefer the **smallest viable diff** — do not refactor unrelated code.
+- Never invent APIs, table columns, or env vars not defined in the spec or plan.
+- TypeScript strict mode — zero `any` types in production code.
+- All user inputs sanitised before Supabase storage — no raw HTML.
+- Cite existing code with file paths when referencing or modifying files.
+- Use `shadcn/ui` components before writing custom components.
+- Rate limit all API routes with Vercel Edge Middleware (100 req/min/IP).
 
-### Git Workflow
-- Feature branches: `feature/description`
-- Bug fixes: `fix/description`
-- Commit messages: Conventional Commits format
-- Always create new commits, never amend unless explicitly requested
+## Execution Contract
 
-### Testing Requirements
-- Unit tests for all utility functions (80% coverage target)
-- Integration tests for API routes and database operations
-- E2E tests for critical user paths (register → interview → export)
-- All tests must pass before PR merge
+For every coding task:
+1. State which user story and task ID this implements (e.g. US2 / T014).
+2. List any constitution constraints that apply.
+3. Produce the implementation with acceptance checks inlined as comments or test assertions.
+4. Flag any decision that would require a constitution amendment — do not proceed without consent.
 
-## Key Features (MVP Scope)
+## Testing Requirements
 
-### Phase 1: Foundation (Weeks 1-2)
-- [ ] Next.js project setup with App Router
-- [ ] Supabase configuration (schema, RLS, Auth)
-- [ ] BYOK key setup flow with validation
-- [ ] User registration and login
-- [ ] Basic project dashboard
-- [ ] Vercel deployment
+- Unit tests: Vitest — target 80% coverage on utilities and state management.
+- Integration tests: Playwright component tests against Supabase test project.
+- E2E tests: Playwright against staging environment.
+- Tests are written BEFORE implementation (TDD). Verify tests FAIL before implementing.
+- CI gates: all unit + integration tests passing, TypeScript zero errors, ESLint zero errors,
+  Lighthouse CI ≥ 85, zero critical axe accessibility violations.
 
-### Phase 2: Core Product (Weeks 3-5)
-- [ ] AI interview chat interface with streaming
-- [ ] 10-domain system prompt implementation
-- [ ] Live documentation bundle preview
-- [ ] Bundle editor with markdown editing
-- [ ] ZIP export functionality
-- [ ] Share link generation
-- [ ] Project templates (5 types)
-- [ ] Regenerate section feature
+## Prompt Evaluation Flywheel
 
-### Phase 3: Polish (Weeks 6-8)
-- [ ] Landing page with SEO
-- [ ] Onboarding tutorial
-- [ ] Error handling and loading states
-- [ ] Performance optimization (Lighthouse 90+)
-- [ ] Accessibility audit (WCAG 2.1 AA)
-- [ ] Analytics integration
-- [ ] Dark mode
+When writing or refining the master system prompt (`DEVDOCS_SYSTEM_PROMPT`):
 
-## Documentation Bundle Output
-The product generates 10 markdown files:
-1. PLANNING.md - Scope, MVP, timeline, success metrics
-2. ARCHITECTURE.md - ADRs, tech stack, system design
-3. DATABASE.md - Schema, migrations, indexing
-4. API-CONTRACTS.md - Endpoint definitions, auth requirements
-5. ENV-STRATEGY.md - Environments, secrets management
-6. AUTH.md - Authentication and authorization architecture
-7. TESTING.md - Testing pyramid, tools, coverage targets
-8. MONITORING.md - Four golden signals, alerting, logging
-9. FRONTEND.md - Design system, component architecture, a11y
-10. DEPLOYMENT.md - Hosting, CI/CD, rollback strategy
+1. **Analyse** — list likely failure modes per project type and translate to binary pass/fail oracles.
+2. **Measure** — create strict PASS/FAIL graders: does the output for project type X include a
+   complete schema? Does it recommend architecture based on the user's stated constraints?
+3. **Improve** — when a grader FAILs, adjust the smallest part of the prompt that caused the
+   failure. Re-run graders until PASS. Never expand the prompt without a failing test that justifies it.
 
-## Important Constraints
-- **MVP Timeline**: 4-6 weeks
-- **No feature creep**: Stick to defined MVP scope
-- **Security non-negotiable**: API key security and RLS are mandatory
-- **Accessibility required**: WCAG 2.1 AA compliance before launch
-- **Performance targets**: Lighthouse 90+ on all metrics
+Test the system prompt against these 5 project archetypes minimum before any production release:
+- Solo founder, SaaS, 3-month deadline, PostgreSQL, moderate backend experience
+- Bootcamp graduate, internal tool, 2-week deadline, no backend experience
+- Small team, API-only service, needs authentication and rate limiting
+- Mobile app (React Native), needs offline support, no existing backend
+- Landing page + waitlist, simple, no database
 
-## Reference Documentation
-See `DevDocs_AI_Project.md` for complete project specification including:
-- Detailed problem statement and market analysis
-- Complete technical architecture and database schema
-- Testing strategy and security requirements
-- Monitoring and deployment strategy
-- Go-to-market plan and monetization strategy
-- Risk register and competitor analysis
+---
 
-## Working with Claude Code
-- Always read the constitution (`.specify/memory/constitution.md`) before starting work
-- Check existing specs in `.specify/specs/` for feature context
-- Use `/sp.specify` to create new feature specifications
-- Use `/sp.plan` to generate technical implementation plans
-- Use `/sp.implement` to execute planned tasks
-- Refer to `DevDocs_AI_Project.md` for architectural decisions
+## Key File Locations
+
+| File | Purpose |
+|------|---------|
+| `memory/constitution.md` | Project governing principles — read first |
+| `specs/001-devdocs-ai-mvp/spec.md` | Full MVP feature specification with user stories |
+| `specs/001-devdocs-ai-mvp/plan.md` | Technical implementation plan with ADRs |
+| `specs/001-devdocs-ai-mvp/data-model.md` | Database schema and RLS policies |
+| `specs/001-devdocs-ai-mvp/tasks.md` | Ordered task list — check off as you go |
+| `specs/001-devdocs-ai-mvp/contracts/` | API route contracts |
+| `history/prompts/` | Prompt History Records per session |

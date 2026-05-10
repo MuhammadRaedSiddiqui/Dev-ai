@@ -52,5 +52,18 @@ Thumbs.db
 # Supabase
 .supabase/
 
-# Don't ignore .specify directory (spec-driven development)
-!.specify/
+# Markdown documentation and planning artifacts
+*.md
+!README.md
+!CLAUDE.md
+
+# Spec-driven development artifacts
+.specify/
+specs/
+history/
+docs/
+
+# Claude Code artifacts
+.claude/commands/
+.claude/skills/
+skills-lock.json
