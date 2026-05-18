@@ -7,6 +7,8 @@ const LABELS: Record<(typeof STITCH_SCREEN_SLUGS)[number], string> = {
   onboarding: 'Onboarding (API Key)',
   dashboard: 'Dashboard',
   interview: 'Interview Workspace',
+  'new-project-modal': 'New Project Modal',
+  settings: 'Settings Page',
 }
 
 export default function StitchDesignIndexPage() {

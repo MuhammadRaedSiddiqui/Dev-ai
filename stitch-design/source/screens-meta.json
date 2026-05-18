@@ -54,9 +54,33 @@
                         "deviceType":  "DESKTOP",
                         "width":  2560,
                         "height":  2048
+                    },
+                    {
+                        "slug":  "new-project-modal",
+                        "title":  "New Project Modal",
+                        "screenId":  "projects/6589043652244716622/screens/7307d6a4febb4d409a59ddf3f3586fc9",
+                        "htmlBytes":  9072,
+                        "bodyClass":  "bg-background min-h-screen flex items-center justify-center font-body-lg text-body-lg text-on-background relative",
+                        "materialIcons":  3,
+                        "images":  0,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
+                    },
+                    {
+                        "slug":  "settings",
+                        "title":  "Settings Page",
+                        "screenId":  "projects/6589043652244716622/screens/b0a55b2f8b044fc0abc7e35e23dd59d4",
+                        "htmlBytes":  12777,
+                        "bodyClass":  "bg-vellum-white text-ink-black flex h-screen overflow-hidden antialiased font-body-md text-body-md",
+                        "materialIcons":  5,
+                        "images":  0,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
                     }
                 ],
     "projectTitle":  "Vellum Academic Journal",
-    "downloadedAt":  "2026-05-16T10:17:38.7883258Z",
+    "downloadedAt":  "2026-05-18T11:08:19.8981674Z",
     "projectId":  "6589043652244716622"
 }

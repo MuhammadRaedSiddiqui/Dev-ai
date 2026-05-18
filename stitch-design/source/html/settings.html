@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - DevDocs AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Lora:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#858382",
+                        "tertiary-fixed": "#e6e1e1",
+                        "tertiary": "#000000",
+                        "tertiary-container": "#1c1b1b",
+                        "primary-container": "#1c1c1a",
+                        "on-surface-variant": "#464742",
+                        "on-secondary-fixed": "#390b00",
+                        "secondary-fixed-dim": "#ffb59e",
+                        "surface-container-high": "#ebe7e6",
+                        "pale-azure": "#ccdbe8",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-bright": "#fdf8f7",
+                        "surface": "#fdf8f7",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#f1edec",
+                        "secondary-fixed": "#ffdbd0",
+                        "secondary": "#99462a",
+                        "tertiary-fixed-dim": "#cac5c5",
+                        "primary-fixed-dim": "#c9c6c4",
+                        "inverse-surface": "#313030",
+                        "on-tertiary-container": "#868383",
+                        "primary-fixed": "#e5e2e0",
+                        "on-secondary-fixed-variant": "#7a2f15",
+                        "background": "#fdf8f7",
+                        "surface-dim": "#ddd9d8",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "parchment": "#dedcd1",
+                        "on-primary-fixed": "#1c1c1a",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#000000",
+                        "inverse-primary": "#c9c6c4",
+                        "outline": "#767872",
+                        "surface-tint": "#5f5e5d",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "dusty-gray": "#73726c",
+                        "graphite": "#3d3d3a",
+                        "ink-black": "#141413",
+                        "vellum-white": "#faf9f5",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#484646",
+                        "surface-container-low": "#f7f3f2",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f4f0ef",
+                        "snow-white": "#ffffff",
+                        "outline-variant": "#c7c7c0",
+                        "on-secondary-container": "#762c12",
+                        "stone": "#9c9a92",
+                        "terra-cotta": "#d97757",
+                        "surface-variant": "#e5e2e1",
+                        "onyx": "#1f1e1d",
+                        "on-background": "#1c1b1b",
+                        "secondary-container": "#fe9572",
+                        "on-primary-fixed-variant": "#474745"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "input": "9.6px"
+                    },
+                    "spacing": {
+                        "gap-xs": "8px",
+                        "unit": "8px",
+                        "gap-md": "24px",
+                        "container-max": "1200px",
+                        "section-xl": "40px",
+                        "gap-lg": "32px"
+                    },
+                    "fontFamily": {
+                        "display": ["Lora"],
+                        "h4": ["Lora"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h2": ["Lora"],
+                        "caption": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h3": ["Lora"]
+                    },
+                    "fontSize": {
+                        "display": ["56px", { "lineHeight": "1.2", "fontWeight": "330" }],
+                        "h4": ["18px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "body-md": ["15px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "h2": ["30px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "1.33", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "h3": ["24px", { "lineHeight": "1.33", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #faf9f5; } /* Vellum White fallback */
+    </style>
+</head>
+<body class="bg-vellum-white text-ink-black flex h-screen overflow-hidden antialiased font-body-md text-body-md">
+<!-- SideNavBar -->
+<aside class="flex flex-col h-screen py-section-xl px-gap-xs bg-vellum-white text-ink-black font-body-sm text-body-sm docked left-0 h-full w-64 border-r border-parchment flat no shadows hidden md:flex shrink-0">
+<div class="mb-gap-lg px-gap-xs">
+<h1 class="font-display text-h4 text-ink-black">Project Alpha</h1>
+<p class="text-stone font-caption text-caption">V1.0.4</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-stone hover:bg-surface-container-low transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-stone hover:bg-surface-container-low transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">vpn_key</span>
+<span>API Keys</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-stone hover:bg-surface-container-low transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span>Drafts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-stone hover:bg-surface-container-low transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-xl">rate_review</span>
+<span>Review</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-ink-black font-bold bg-surface-container translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-gap-xs pt-gap-lg">
+<button class="w-full py-3 bg-ink-black text-snow-white rounded-input font-body-sm text-body-sm hover:bg-graphite transition-colors duration-200">
+                New Project
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-screen overflow-y-auto bg-vellum-white relative">
+<!-- TopAppBar (Breadcrumb) -->
+<header class="sticky top-0 z-10 bg-vellum-white/95 backdrop-blur-sm border-b border-parchment h-16 flex items-center px-gap-lg w-full">
+<nav aria-label="Breadcrumb" class="font-caption text-caption text-dusty-gray">
+<ol class="flex items-center space-x-2">
+<li><a class="hover:text-ink-black transition-colors" href="#">Projects</a></li>
+<li><span class="text-parchment">/</span></li>
+<li><a class="hover:text-ink-black transition-colors" href="#">Project Alpha</a></li>
+<li><span class="text-parchment">/</span></li>
+<li aria-current="page" class="text-ink-black">Settings</li>
+</ol>
+</nav>
+</header>
+<!-- Canvas -->
+<main class="w-full max-w-[800px] mx-auto px-gap-lg py-section-xl space-y-section-xl">
+<!-- Page Header -->
+<section>
+<h2 class="font-h2 text-h2 text-ink-black mb-2">Settings</h2>
+<p class="font-body-sm text-body-sm text-dusty-gray">Manage your account configuration and project defaults.</p>
+</section>
+<!-- API Configuration -->
+<section class="space-y-6">
+<h3 class="font-h3 text-h3 text-ink-black border-b border-parchment pb-2">API Credentials</h3>
+<div class="space-y-3 max-w-md">
+<label class="block font-body-sm text-body-sm text-ink-black" for="api_key">Anthropic API Key</label>
+<div class="relative">
+<input class="block w-full bg-snow-white border border-parchment rounded-input px-3 py-2 text-ink-black font-body-md text-body-md placeholder:text-stone focus:outline-none focus:border-ink-black focus:ring-1 focus:ring-ink-black transition-colors" id="api_key" name="api_key" readonly="" type="password" value="sk-ant-api03-xxxxxxxxxxxxxxxxxxxxxxxxx"/>
+</div>
+<p class="font-caption text-caption text-dusty-gray">Your key is stored locally and never leaves your browser.</p>
+<button class="mt-4 px-6 py-2 border border-parchment bg-transparent text-ink-black rounded-input font-body-sm text-body-sm hover:bg-surface-container-low transition-colors duration-200 inline-block">
+                        Update Key
+                    </button>
+</div>
+</section>
+<!-- Project Preferences -->
+<section class="space-y-6">
+<h3 class="font-h3 text-h3 text-ink-black border-b border-parchment pb-2">Project Defaults</h3>
+<div class="space-y-6 max-w-md">
+<div class="space-y-2">
+<label class="block font-body-sm text-body-sm text-ink-black" for="doc_format">Default Documentation Format</label>
+<select class="block w-full bg-snow-white border border-parchment rounded-input px-3 py-2.5 text-ink-black font-body-md text-body-md focus:outline-none focus:border-ink-black focus:ring-1 focus:ring-ink-black appearance-none cursor-pointer" id="doc_format" name="doc_format">
+<option selected="" value="markdown">Markdown</option>
+<option value="latex">LaTeX</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-ink-black">
+<!-- Dropdown arrow via CSS background or position absolute next to select if needed, handled by appearance-none generally requiring custom arrow if strictly styled, sticking to minimal -->
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<span class="block font-body-sm text-body-sm text-ink-black">Auto-save Drafts</span>
+<span class="font-caption text-caption text-dusty-gray">Automatically save your work locally.</span>
+</div>
+<!-- Toggle -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-parchment peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-snow-white after:border-parchment after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ink-black"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Account Actions (Danger Zone) -->
+<section class="space-y-6 pt-gap-lg">
+<h3 class="font-h3 text-h3 text-terra-cotta border-b border-parchment pb-2">Danger Zone</h3>
+<div class="space-y-4">
+<p class="font-body-sm text-body-sm text-graphite">Permanently delete your local data and reset the session.</p>
+<button class="px-6 py-2 border border-terra-cotta bg-transparent text-terra-cotta rounded-input font-body-sm text-body-sm hover:bg-error-container/20 transition-colors duration-200">
+                        Reset Local Storage
+                    </button>
+</div>
+</section>
+</main>
+</div>
+</body></html>

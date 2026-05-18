@@ -13,7 +13,11 @@ const ROOT = path.join(__dirname, '..')
 const HTML_DIR = path.join(ROOT, 'stitch-design', 'source', 'html')
 const OUT_DIR = path.join(ROOT, 'app', 'stitch-design')
 
-const SLUGS = ['landing', 'login', 'onboarding', 'dashboard', 'interview']
+const SLUGS = fs
+  .readdirSync(HTML_DIR)
+  .filter((f) => f.endsWith('.html'))
+  .map((f) => f.replace(/\.html$/, ''))
+  .sort()
 
 const VOID_TAGS = new Set([
   'area',
@@ -70,6 +74,8 @@ function convertAttributes(tag) {
   result = result.replace(/\sfor="/g, ' htmlFor="')
   result = result.replace(/\sfor='/g, " htmlFor='")
   result = result.replace(/\btabindex=/gi, 'tabIndex=')
+  result = result.replace(/\sreadonly=""/gi, ' readOnly')
+  result = result.replace(/\sreadonly=''/gi, ' readOnly')
   result = result.replace(/\sreadonly\b/gi, ' readOnly')
   result = result.replace(/\sautocomplete=/gi, ' autoComplete=')
   result = result.replace(/\smaxlength=/gi, ' maxLength=')
@@ -80,6 +86,7 @@ function convertAttributes(tag) {
   result = result.replace(/\srequired=''/gi, ' required')
   result = result.replace(/\sdisabled=""/gi, ' disabled')
   result = result.replace(/\schecked=""/gi, ' checked')
+  result = result.replace(/\sselected=""/gi, ' selected')
   return result
 }
 
@@ -161,11 +168,18 @@ function formatJsx(jsx, indent = 6) {
     .join('\n')
 }
 
+function slugToPascalCase(slug) {
+  return slug
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')
+}
+
 function generatePage(slug, bodyClass, inner, hasImage) {
   const jsx = formatJsx(htmlToJsx(inner))
   const rewrittenBodyClass = rewriteStitchClasses(bodyClass)
   const imageImport = hasImage ? "import Image from 'next/image'\n\n" : ''
-  const title = slug.charAt(0).toUpperCase() + slug.slice(1)
+  const title = slugToPascalCase(slug)
 
   return `${imageImport}export default function Stitch${title}Page() {
   return (

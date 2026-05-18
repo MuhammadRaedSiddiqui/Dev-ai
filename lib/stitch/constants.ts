@@ -9,6 +9,8 @@ export const STITCH_SCREEN_SLUGS = [
   'onboarding',
   'dashboard',
   'interview',
+  'new-project-modal',
+  'settings',
 ] as const
 
 export type StitchScreenSlug = (typeof STITCH_SCREEN_SLUGS)[number]
@@ -19,4 +21,6 @@ export const STITCH_SCREEN_ROUTES: Record<StitchScreenSlug, string> = {
   onboarding: '/stitch-design/onboarding',
   dashboard: '/stitch-design/dashboard',
   interview: '/stitch-design/interview',
+  'new-project-modal': '/stitch-design/new-project-modal',
+  settings: '/stitch-design/settings',
 }
