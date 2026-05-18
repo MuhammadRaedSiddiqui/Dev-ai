@@ -52,18 +52,7 @@ Thumbs.db
 # Supabase
 .supabase/
 
-# Markdown documentation and planning artifacts
-*.md
-!README.md
-!CLAUDE.md
-
-# Spec-driven development artifacts
-.specify/
-specs/
-history/
-docs/
-
-# Claude Code artifacts
+# Claude Code artifacts (keep these local)
 .claude/commands/
 .claude/skills/
 skills-lock.json

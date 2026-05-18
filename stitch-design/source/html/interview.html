@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevDocs AI - Interview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "ink-black": "#141413",
+                        "on-primary-fixed-variant": "#474745",
+                        "tertiary-fixed-dim": "#cac5c5",
+                        "surface-dim": "#ddd9d8",
+                        "tertiary-fixed": "#e6e1e1",
+                        "secondary-fixed": "#ffdbd0",
+                        "primary-fixed-dim": "#c9c6c4",
+                        "inverse-primary": "#c9c6c4",
+                        "surface-container": "#f1edec",
+                        "on-primary-container": "#858382",
+                        "outline-variant": "#c7c7c0",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "stone": "#9c9a92",
+                        "primary-fixed": "#e5e2e0",
+                        "surface": "#fdf8f7",
+                        "primary": "#000000",
+                        "primary-container": "#1c1c1a",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "terra-cotta": "#d97757",
+                        "inverse-on-surface": "#f4f0ef",
+                        "on-secondary-container": "#762c12",
+                        "vellum-white": "#faf9f5",
+                        "outline": "#767872",
+                        "surface-container-low": "#f7f3f2",
+                        "parchment": "#dedcd1",
+                        "onyx": "#1f1e1d",
+                        "pale-azure": "#ccdbe8",
+                        "surface-tint": "#5f5e5d",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "background": "#fdf8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary": "#99462a",
+                        "surface-container-high": "#ebe7e6",
+                        "on-primary-fixed": "#1c1c1a",
+                        "tertiary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fe9572",
+                        "dusty-gray": "#73726c",
+                        "graphite": "#3d3d3a",
+                        "surface-bright": "#fdf8f7",
+                        "on-tertiary-fixed-variant": "#484646",
+                        "on-background": "#1c1b1b",
+                        "on-secondary-fixed": "#390b00",
+                        "secondary-fixed-dim": "#ffb59e",
+                        "on-secondary-fixed-variant": "#7a2f15",
+                        "on-error-container": "#93000a",
+                        "snow-white": "#ffffff",
+                        "tertiary-container": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e5e2e1",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#464742",
+                        "on-tertiary-container": "#868383"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gap-lg": "32px",
+                        "section-xl": "40px",
+                        "container-max": "1200px",
+                        "gap-md": "24px",
+                        "unit": "8px",
+                        "gap-xs": "8px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Lora"],
+                        "caption": ["Inter"],
+                        "h4": ["Lora"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display": ["Lora"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Lora"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "h4": ["18px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "1.33", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display": ["56px", { "lineHeight": "1.2", "fontWeight": "330" }],
+                        "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h2": ["30px", { "lineHeight": "1.33", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+@keyframes fadeIn {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-fadeIn {
+  animation: fadeIn 100ms ease-out forwards;
+}
+.animate-blink {
+  animation: blink 500ms ease-in-out infinite;
+}
+</style></head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-ink-black docked full-width top-0 border-b border-parchment dark:border-graphite flat no shadows flex justify-between items-center w-full px-gap-lg max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-gap-md">
+<span class="font-display text-h3 font-normal text-ink-black dark:text-snow-white">DevDocs AI</span>
+<nav class="hidden md:flex gap-gap-md ml-gap-lg">
+<a class="font-body-md text-body-md text-stone dark:text-dusty-gray hover:text-terra-cotta transition-colors duration-200" href="#">Workspace</a>
+<a class="font-body-md text-body-md text-ink-black dark:text-snow-white border-b border-ink-black dark:border-snow-white pb-1 opacity-80 transition-all duration-100" href="#">Documentation</a>
+<a class="font-body-md text-body-md text-stone dark:text-dusty-gray hover:text-terra-cotta transition-colors duration-200" href="#">Project Hub</a>
+<a class="font-body-md text-body-md text-stone dark:text-dusty-gray hover:text-terra-cotta transition-colors duration-200" href="#">Resources</a>
+</nav>
+</div>
+<div class="flex items-center gap-gap-md">
+<button class="font-body-md text-body-md text-stone dark:text-dusty-gray hover:text-terra-cotta transition-colors duration-200">Sign In</button>
+<button class="bg-ink-black text-snow-white font-body-md text-body-md px-gap-md py-unit hover:bg-surface-tint transition-colors duration-200 rounded-[9.6px]">Get Started</button>
+</div>
+</header>
+<!-- Main Content Layout (3 Columns) -->
+<main class="flex-grow flex flex-col md:flex-row w-full max-w-[1440px] mx-auto overflow-hidden">
+<!-- Left Column: Domain Progress -->
+<aside class="w-full md:w-64 bg-vellum-white dark:bg-onyx border-r border-parchment dark:border-graphite flex flex-col h-full overflow-y-auto p-gap-md">
+<h2 class="font-h4 text-h4 text-ink-black dark:text-snow-white mb-gap-md">Domain Progress</h2>
+<div class="mb-gap-lg">
+<div class="flex justify-between items-center mb-unit">
+<span class="font-label-caps text-label-caps text-stone">Overall Completion</span>
+<span class="font-caption text-caption text-ink-black font-semibold">45%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-ink-black h-2 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<nav class="flex flex-col gap-unit">
+<div class="flex items-center gap-unit p-unit bg-surface-container-low border border-parchment rounded-[9.6px]">
+<span class="material-symbols-outlined text-terra-cotta" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-ink-black line-through text-opacity-50">System Context</span>
+</div>
+<div class="flex items-center gap-unit p-unit bg-surface-container-low border border-parchment rounded-[9.6px]">
+<span class="material-symbols-outlined text-terra-cotta" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-ink-black line-through text-opacity-50">Data Models</span>
+</div>
+<div class="flex items-center gap-unit p-unit bg-surface border-l-2 border-l-ink-black rounded-[9.6px]">
+<span class="material-symbols-outlined text-ink-black">radio_button_unchecked</span>
+<span class="font-body-sm text-body-sm text-ink-black font-semibold">API Endpoints</span>
+</div>
+<div class="flex items-center gap-unit p-unit hover:bg-surface-container-low transition-colors rounded-[9.6px]">
+<span class="material-symbols-outlined text-stone">radio_button_unchecked</span>
+<span class="font-body-sm text-body-sm text-stone">Security Posture</span>
+</div>
+<div class="flex items-center gap-unit p-unit hover:bg-surface-container-low transition-colors rounded-[9.6px]">
+<span class="material-symbols-outlined text-stone">radio_button_unchecked</span>
+<span class="font-body-sm text-body-sm text-stone">Deployment Strats</span>
+</div>
+</nav>
+</aside>
+<!-- Center Column: Chat Interface -->
+<section class="flex-grow flex flex-col bg-surface relative min-w-0 border-r border-parchment dark:border-graphite">
+<!-- Chat Header -->
+<div class="px-gap-md py-unit border-b border-parchment bg-vellum-white flex justify-between items-center sticky top-0 z-10">
+<h1 class="font-h3 text-h3 text-ink-black">API Endpoints Review</h1>
+<button class="text-stone hover:text-ink-black transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Chat Messages Area -->
+<div class="flex-grow overflow-y-auto p-gap-md flex flex-col gap-gap-md">
+<!-- AI Message -->
+<div class="flex gap-gap-xs max-w-[85%]">
+<div class="w-8 h-8 rounded-full bg-ink-black flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-snow-white text-[18px]">psychology</span>
+</div>
+<div class="bg-vellum-white border border-parchment rounded-lg rounded-tl-none p-gap-xs px-gap-md">
+<p class="font-body-md text-body-md text-ink-black">Let's move on to the API Endpoints. Can you outline the primary REST resources for the core application?</p>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-gap-xs max-w-[85%] self-end flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0 border border-parchment">
+<span class="material-symbols-outlined text-ink-black text-[18px]">person</span>
+</div>
+<div class="bg-surface-container-low border border-parchment rounded-lg rounded-tr-none p-gap-xs px-gap-md">
+<p class="font-body-md text-body-md text-ink-black">Sure. The main ones are `/users`, `/projects`, and `/deployments`. Users can have many projects.</p>
+</div>
+</div>
+<!-- AI Message (Streaming effect simulated) -->
+<div class="flex gap-gap-xs max-w-[85%]">
+<div class="w-8 h-8 rounded-full bg-ink-black flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-snow-white text-[18px]">psychology</span>
+</div>
+<div class="bg-vellum-white border border-parchment rounded-lg rounded-tl-none p-gap-xs px-gap-md">
+<p class="font-body-md text-body-md text-ink-black animate-fadeIn">Excellent. For `/projects`, what are the supported HTTP methods, and are there any nested routes we should document? <span class="inline-block w-[2px] h-[16px] bg-[#141413] animate-blink align-middle ml-1"></span></p>
+</div>
+</div>
+</div>
+<!-- Chat Input Area -->
+<div class="p-gap-md border-t border-parchment bg-surface sticky bottom-0">
+<div class="relative flex items-end bg-snow-white border border-parchment p-unit focus-within:border-outline transition-colors rounded-[9.6px]">
+<textarea class="w-full bg-snow-white border-none focus:ring-0 resize-none font-body-md text-body-md text-ink-black placeholder:text-stone min-h-[44px] max-h-[120px]" placeholder="Describe the API endpoints..."></textarea>
+<button class="bg-ink-black text-snow-white p-unit ml-unit hover:bg-surface-tint transition-colors flex items-center justify-center flex-shrink-0 rounded-[9.6px]">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+<p class="font-caption text-caption text-stone text-center mt-unit">Press Enter to send, Shift+Enter for new line.</p>
+</div>
+</section>
+<!-- Right Column: Documentation Preview -->
+<aside class="w-full md:w-[400px] bg-vellum-white border-l border-parchment flex flex-col h-full overflow-hidden" style="transition: transform 400ms cubic-bezier(0.4, 0, 0.1, 1);">
+<div class="px-gap-md py-unit border-b border-parchment flex justify-between items-center bg-surface sticky top-0 z-10">
+<h2 class="font-h4 text-h4 text-ink-black flex items-center gap-unit">
+<span class="material-symbols-outlined text-stone">description</span>
+                    Live Document
+                </h2>
+<div class="flex gap-unit">
+<button class="text-stone hover:text-ink-black transition-colors" title="Copy Markdown">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+<button class="text-stone hover:text-ink-black transition-colors" title="Expand Preview">
+<span class="material-symbols-outlined text-[20px]">open_in_full</span>
+</button>
+</div>
+</div>
+<div class="flex-grow overflow-y-auto p-gap-md prose prose-sm max-w-none">
+<h1 class="font-h2 text-h2 font-display text-ink-black mb-gap-md border-b border-parchment pb-unit">System Architecture</h1>
+<h2 class="font-h3 text-h3 text-ink-black mt-gap-md mb-unit">1. System Context</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-gap-md">The core system orchestrates interactions between the user dashboard, the analysis engine, and the primary data store.</p>
+<h2 class="font-h3 text-h3 text-ink-black mt-gap-md mb-unit">2. Data Models</h2>
+<ul class="list-disc pl-gap-md mb-gap-md font-body-sm text-body-sm text-on-surface-variant space-y-1">
+<li><strong>User:</strong> Core identity entity.</li>
+<li><strong>Project:</strong> Represents a documentation workspace.</li>
+</ul>
+<h2 class="font-h3 text-h3 text-ink-black mt-gap-md mb-unit">3. API Endpoints (Draft)</h2>
+<div class="bg-surface-container-low border border-parchment p-gap-xs mb-gap-md font-mono text-caption text-ink-black overflow-x-auto rounded-[9.6px]">
+<pre><code>GET    /api/v1/users
+GET    /api/v1/projects
+POST   /api/v1/projects
+GET    /api/v1/deployments</code></pre>
+</div>
+<p class="font-caption text-caption text-stone italic mt-unit border-l-2 border-parchment pl-unit">AI note: Awaiting details on supported methods for nested routes.</p>
+</div>
+</aside>
+</main>
+</body></html>

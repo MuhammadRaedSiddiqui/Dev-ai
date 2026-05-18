@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - API Key Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Lora:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "ink-black": "#141413",
+                        "on-primary-fixed-variant": "#474745",
+                        "tertiary-fixed-dim": "#cac5c5",
+                        "surface-dim": "#ddd9d8",
+                        "tertiary-fixed": "#e6e1e1",
+                        "secondary-fixed": "#ffdbd0",
+                        "primary-fixed-dim": "#c9c6c4",
+                        "inverse-primary": "#c9c6c4",
+                        "surface-container": "#f1edec",
+                        "on-primary-container": "#858382",
+                        "outline-variant": "#c7c7c0",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "stone": "#9c9a92",
+                        "primary-fixed": "#e5e2e0",
+                        "surface": "#fdf8f7",
+                        "primary": "#000000",
+                        "primary-container": "#1c1c1a",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "terra-cotta": "#d97757",
+                        "inverse-on-surface": "#f4f0ef",
+                        "on-secondary-container": "#762c12",
+                        "vellum-white": "#faf9f5",
+                        "outline": "#767872",
+                        "surface-container-low": "#f7f3f2",
+                        "parchment": "#dedcd1",
+                        "onyx": "#1f1e1d",
+                        "pale-azure": "#ccdbe8",
+                        "surface-tint": "#5f5e5d",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "background": "#fdf8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary": "#99462a",
+                        "surface-container-high": "#ebe7e6",
+                        "on-primary-fixed": "#1c1c1a",
+                        "tertiary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fe9572",
+                        "dusty-gray": "#73726c",
+                        "graphite": "#3d3d3a",
+                        "surface-bright": "#fdf8f7",
+                        "on-tertiary-fixed-variant": "#484646",
+                        "on-background": "#1c1b1b",
+                        "on-secondary-fixed": "#390b00",
+                        "secondary-fixed-dim": "#ffb59e",
+                        "on-secondary-fixed-variant": "#7a2f15",
+                        "on-error-container": "#93000a",
+                        "snow-white": "#ffffff",
+                        "tertiary-container": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e5e2e1",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#464742",
+                        "on-tertiary-container": "#868383"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gap-lg": "32px",
+                        "section-xl": "40px",
+                        "container-max": "1200px",
+                        "gap-md": "24px",
+                        "unit": "8px",
+                        "gap-xs": "8px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Lora"],
+                        "caption": ["Inter"],
+                        "h4": ["Lora"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display": ["Lora"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Lora"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "h4": ["18px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "1.33", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display": ["56px", { "lineHeight": "1.2", "fontWeight": "330" }],
+                        "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h2": ["30px", { "lineHeight": "1.33", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-vellum-white min-h-screen flex items-center justify-center p-gap-md font-body-md text-ink-black antialiased">
+<!-- Main Container - Suppressing navigation per onboarding rules -->
+<main class="w-full max-w-[600px] bg-vellum-white border border-parchment p-section-xl relative">
+<!-- Subtle decorative top line referencing a printed page header -->
+<div class="absolute top-0 left-8 right-8 h-[1px] bg-parchment"></div>
+<div class="mb-section-xl">
+<span class="font-label-caps text-label-caps text-stone block mb-gap-xs">Step 1 of 2</span>
+<h1 class="font-display text-display text-ink-black tracking-tight mb-4">Initialize Session</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[480px]">
+                To commence scholarly analysis, please provide your Anthropic API credentials. This establishes the foundational reasoning engine for your project.
+            </p>
+</div>
+<form class="space-y-gap-lg">
+<!-- Input Field Group -->
+<div>
+<label class="font-body-md text-body-md text-ink-black block mb-2" for="api-key">Anthropic API Key</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone text-lg select-none">key</span>
+<input class="w-full bg-snow-white border border-parchment rounded-DEFAULT py-3 pl-10 pr-4 font-body-md text-ink-black placeholder-stone focus:outline-none focus:border-outline focus:ring-1 focus:ring-outline transition-colors shadow-sm !border-error" id="api-key" placeholder="sk-ant-api03-..." style="border-radius: 9.6px;" type="password"/><p class="text-terra-cotta text-caption mt-2">Invalid API key. Please check your credentials and try again.</p>
+</div>
+</div>
+<!-- Info Card -->
+<div class="bg-surface-container-lowest border border-parchment p-6 flex items-start gap-4">
+<span class="material-symbols-outlined text-terra-cotta mt-0.5 select-none" data-weight="fill" style="font-variation-settings: 'FILL' 1;">info</span>
+<div class="font-body-sm text-body-sm text-on-surface-variant space-y-2">
+<p>
+                        Your key acts as a direct conduit to the language model. It remains encrypted locally on your device and is never stored on external servers.
+                    </p>
+<p>
+                        For a comprehensive review of our security measures, please consult the <a class="text-terra-cotta hover:underline underline-offset-2" href="#">Data Handling Protocol</a>.
+                    </p>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-gap-md flex flex-col-reverse sm:flex-row items-center justify-between gap-4 border-t border-parchment mt-section-xl">
+<button class="font-body-sm text-body-sm text-stone hover:text-ink-black transition-colors px-4 py-2 border border-transparent hover:border-parchment rounded-DEFAULT w-full sm:w-auto text-center" style="border-radius: 9.6px;" type="button">
+                    Proceed in Mock Mode
+                </button>
+<button class="bg-ink-black text-snow-white font-body-md text-body-md px-8 py-3 rounded-DEFAULT hover:bg-onyx transition-colors w-full sm:w-auto flex items-center justify-center gap-2 font-medium opacity-90" disabled="true" style="border-radius: 9.6px;" type="submit"><span class="material-symbols-outlined animate-spin">progress_activity</span></button>
+</div>
+</form>
+</main>
+</body></html>

@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
+  presets: [require('./lib/stitch/tailwind-preset.cjs')],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',

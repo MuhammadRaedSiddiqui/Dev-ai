@@ -1,0 +1,62 @@
+﻿{
+    "screens":  [
+                    {
+                        "slug":  "login",
+                        "title":  "Login Page - Refined Components",
+                        "htmlBytes":  11104,
+                        "bodyClass":  "bg-surface text-on-surface min-h-screen flex items-center justify-center p-4",
+                        "materialIcons":  2,
+                        "images":  0,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
+                    },
+                    {
+                        "slug":  "landing",
+                        "title":  "Landing Page - Refined Components",
+                        "htmlBytes":  11873,
+                        "bodyClass":  "bg-vellum-white min-h-screen flex flex-col font-body-md text-body-md text-ink-black antialiased",
+                        "materialIcons":  4,
+                        "images":  0,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
+                    },
+                    {
+                        "slug":  "interview",
+                        "title":  "Interview Workspace - Refined Components",
+                        "htmlBytes":  15859,
+                        "bodyClass":  "bg-background text-on-background font-body-md min-h-screen flex flex-col",
+                        "materialIcons":  14,
+                        "images":  0,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
+                    },
+                    {
+                        "slug":  "dashboard",
+                        "title":  "Dashboard - Refined Components",
+                        "htmlBytes":  13434,
+                        "bodyClass":  "bg-background text-ink-black font-body-md antialiased min-h-screen flex",
+                        "materialIcons":  9,
+                        "images":  1,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
+                    },
+                    {
+                        "slug":  "onboarding",
+                        "title":  "Onboarding - API Key Error \u0026 Loading State",
+                        "htmlBytes":  9358,
+                        "bodyClass":  "bg-vellum-white min-h-screen flex items-center justify-center p-gap-md font-body-md text-ink-black antialiased",
+                        "materialIcons":  4,
+                        "images":  0,
+                        "deviceType":  "DESKTOP",
+                        "width":  2560,
+                        "height":  2048
+                    }
+                ],
+    "projectTitle":  "Vellum Academic Journal",
+    "downloadedAt":  "2026-05-16T10:17:38.7883258Z",
+    "projectId":  "6589043652244716622"
+}

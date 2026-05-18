@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevDocs AI - Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "ink-black": "#141413",
+                        "on-primary-fixed-variant": "#474745",
+                        "tertiary-fixed-dim": "#cac5c5",
+                        "surface-dim": "#ddd9d8",
+                        "tertiary-fixed": "#e6e1e1",
+                        "secondary-fixed": "#ffdbd0",
+                        "primary-fixed-dim": "#c9c6c4",
+                        "inverse-primary": "#c9c6c4",
+                        "surface-container": "#f1edec",
+                        "on-primary-container": "#858382",
+                        "outline-variant": "#c7c7c0",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "stone": "#9c9a92",
+                        "primary-fixed": "#e5e2e0",
+                        "surface": "#fdf8f7",
+                        "primary": "#000000",
+                        "primary-container": "#1c1c1a",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "terra-cotta": "#d97757",
+                        "inverse-on-surface": "#f4f0ef",
+                        "on-secondary-container": "#762c12",
+                        "vellum-white": "#faf9f5",
+                        "outline": "#767872",
+                        "surface-container-low": "#f7f3f2",
+                        "parchment": "#dedcd1",
+                        "onyx": "#1f1e1d",
+                        "pale-azure": "#ccdbe8",
+                        "surface-tint": "#5f5e5d",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "background": "#fdf8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary": "#99462a",
+                        "surface-container-high": "#ebe7e6",
+                        "on-primary-fixed": "#1c1c1a",
+                        "tertiary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fe9572",
+                        "dusty-gray": "#73726c",
+                        "graphite": "#3d3d3a",
+                        "surface-bright": "#fdf8f7",
+                        "on-tertiary-fixed-variant": "#484646",
+                        "on-background": "#1c1b1b",
+                        "on-secondary-fixed": "#390b00",
+                        "secondary-fixed-dim": "#ffb59e",
+                        "on-secondary-fixed-variant": "#7a2f15",
+                        "on-error-container": "#93000a",
+                        "snow-white": "#ffffff",
+                        "tertiary-container": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e5e2e1",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#464742",
+                        "on-tertiary-container": "#868383"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "9.6px",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gap-lg": "32px",
+                        "section-xl": "40px",
+                        "container-max": "1200px",
+                        "gap-md": "24px",
+                        "unit": "8px",
+                        "gap-xs": "8px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Lora"],
+                        "caption": ["Inter"],
+                        "h4": ["Lora"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display": ["Lora"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Lora"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "h4": ["18px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "1.33", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display": ["56px", { "lineHeight": "1.2", "fontWeight": "330" }],
+                        "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h2": ["30px", { "lineHeight": "1.33", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-ink-black font-body-md antialiased min-h-screen flex">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-vellum-white border-r border-parchment flex flex-col py-section-xl px-gap-xs z-20">
+<!-- Header -->
+<div class="px-3 mb-gap-lg flex items-center gap-3">
+<img alt="Project Avatar" class="w-10 h-10 rounded-DEFAULT object-cover border border-parchment" data-alt="A minimalist, flat-vector geometric logo design featuring a prominent 'A' shape intertwined with abstract technological nodes. The logo is rendered in deep ink black and terra cotta, set against a pure white background. The style is heavily inspired by mid-century academic press colophons, featuring perfectly clean lines, no gradients, and zero drop shadows. The overall aesthetic communicates intellectual rigor and modern software engineering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQbSeu3ADwVGl-LO_NFP466TLJsjQ7thdXyy6EMC-mU1uNDRo1hBLBg0VY0XSfg4EUIeVfYaEww-8RL2_yus-cuCoWACDWYrPwL98JoENrW9gNyQrg_WZ5auPuvPdRat-AXnnDCMScH5mX7nbW7z4Y8idA1NG0kdS-DukearScDUP0Gc8iOOnQ2xgTdanuUNXdPmpDSQqJp--he8Wd1d6zw9EdMfXbNsI6t8vNWrgLxPsvQjzUWemmWnZunRKXTxVwLA12rBmcVec"/>
+<div>
+<h2 class="font-display text-h4 text-ink-black">Project Alpha</h2>
+<p class="font-caption text-caption text-stone mt-0.5">V1.0.4</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 flex flex-col gap-1">
+<!-- Active State: Overview -->
+<a class="flex items-center gap-3 px-3 py-2 text-ink-black font-bold bg-surface-container translate-x-1 transition-transform duration-200 rounded-none" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-body-sm text-body-sm">Overview</span>
+</a>
+<!-- Inactive States -->
+<a class="flex items-center gap-3 px-3 py-2 text-stone hover:bg-surface-container-low transition-colors duration-200 rounded-none" href="#">
+<span class="material-symbols-outlined text-[20px]">vpn_key</span>
+<span class="font-body-sm text-body-sm">API Keys</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone hover:bg-surface-container-low transition-colors duration-200 rounded-none" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="font-body-sm text-body-sm">Drafts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone hover:bg-surface-container-low transition-colors duration-200 rounded-none" href="#">
+<span class="material-symbols-outlined text-[20px]">rate_review</span>
+<span class="font-body-sm text-body-sm">Review</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-stone hover:bg-surface-container-low transition-colors duration-200 rounded-none" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-body-sm text-body-sm">Settings</span>
+</a>
+</nav>
+<!-- CTA -->
+<div class="px-3 mt-auto pt-gap-md border-t border-parchment">
+<button class="w-full py-2 px-4 border border-outline-variant bg-transparent text-ink-black hover:bg-surface-container-low transition-colors duration-200 rounded-DEFAULT font-label-caps text-label-caps uppercase tracking-wider flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">add</span>
+                New Project
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 p-section-xl max-w-container-max mx-auto">
+<!-- Header Area -->
+<header class="flex justify-between items-end mb-gap-lg border-b border-parchment pb-gap-md">
+<div>
+<h1 class="font-display text-display text-ink-black tracking-tight">Your Projects</h1>
+<p class="font-body-lg text-body-lg text-stone mt-2 max-w-2xl">Manage your active documentation repositories and editorial drafts.</p>
+</div>
+</header>
+<!-- Projects Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gap-md">
+<!-- Project Card 1: In Progress -->
+<article class="group bg-vellum-white border border-parchment p-gap-md flex flex-col min-h-[220px] rounded-DEFAULT hover:border-outline transition-colors duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="inline-flex items-center px-2 py-1 bg-surface-container-high border border-parchment rounded-full font-label-caps text-label-caps text-ink-black uppercase">
+                        Integration Guide
+                    </span>
+<button class="text-stone hover:text-ink-black transition-colors rounded-DEFAULT">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="mb-6">
+<h3 class="font-h3 text-h3 text-ink-black mb-2">Core API Reference</h3>
+<p class="font-body-sm text-body-sm text-stone line-clamp-2">Complete structural overhaul of the primary authentication endpoints and rate limiting documentation.</p>
+</div>
+<div class="mt-auto pt-4 border-t border-parchment flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-terra-cotta"></div>
+<span class="font-label-caps text-label-caps text-terra-cotta uppercase tracking-wide">In Progress</span>
+</div>
+<span class="font-caption text-caption text-stone">Updated 4h ago</span>
+</div>
+</article>
+<!-- Project Card 2: Complete -->
+<article class="group bg-vellum-white border border-parchment p-gap-md flex flex-col min-h-[220px] rounded-DEFAULT hover:border-outline transition-colors duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="inline-flex items-center px-2 py-1 bg-surface-container-high border border-parchment rounded-full font-label-caps text-label-caps text-ink-black uppercase">
+                        SDK Manual
+                    </span>
+<button class="text-stone hover:text-ink-black transition-colors rounded-DEFAULT">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="mb-6">
+<h3 class="font-h3 text-h3 text-ink-black mb-2">iOS Authentication</h3>
+<p class="font-body-sm text-body-sm text-stone line-clamp-2">Step-by-step tutorial for implementing OAuth2 via the native Swift SDK with code samples.</p>
+</div>
+<div class="mt-auto pt-4 border-t border-parchment flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="font-label-caps text-label-caps text-ink-black uppercase tracking-wide">Complete</span>
+</div>
+<span class="font-caption text-caption text-stone">Approved Oct 12</span>
+</div>
+</article>
+<!-- Empty State / Create New Card (Bento Grid Style) -->
+<button class="bg-surface-container border border-dashed border-outline-variant p-gap-md flex flex-col items-center justify-center min-h-[220px] rounded-DEFAULT hover:bg-surface-container-high hover:border-outline transition-all duration-300 group text-center">
+<div class="w-16 h-16 bg-secondary-fixed/30 rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[32px] text-terra-cotta">post_add</span>
+</div>
+<h3 class="font-h4 text-h4 text-ink-black mb-1">Create Project</h3>
+<p class="font-body-sm text-body-sm text-stone max-w-[200px]">Initialize a new academic structure for your documentation.</p>
+</button>
+</div>
+</main>
+</body></html>

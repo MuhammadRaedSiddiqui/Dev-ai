@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevDocs AI - Academic Planning</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Lora:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "ink-black": "#141413",
+                            "on-primary-fixed-variant": "#474745",
+                            "tertiary-fixed-dim": "#cac5c5",
+                            "surface-dim": "#ddd9d8",
+                            "tertiary-fixed": "#e6e1e1",
+                            "secondary-fixed": "#ffdbd0",
+                            "primary-fixed-dim": "#c9c6c4",
+                            "inverse-primary": "#c9c6c4",
+                            "surface-container": "#f1edec",
+                            "on-primary-container": "#858382",
+                            "outline-variant": "#c7c7c0",
+                            "on-error": "#ffffff",
+                            "inverse-surface": "#313030",
+                            "stone": "#9c9a92",
+                            "primary-fixed": "#e5e2e0",
+                            "surface": "#fdf8f7",
+                            "primary": "#000000",
+                            "primary-container": "#1c1c1a",
+                            "on-tertiary-fixed": "#1c1b1b",
+                            "terra-cotta": "#d97757",
+                            "inverse-on-surface": "#f4f0ef",
+                            "on-secondary-container": "#762c12",
+                            "vellum-white": "#faf9f5",
+                            "outline": "#767872",
+                            "surface-container-low": "#f7f3f2",
+                            "parchment": "#dedcd1",
+                            "onyx": "#1f1e1d",
+                            "pale-azure": "#ccdbe8",
+                            "surface-tint": "#5f5e5d",
+                            "on-secondary": "#ffffff",
+                            "error-container": "#ffdad6",
+                            "background": "#fdf8f7",
+                            "surface-container-lowest": "#ffffff",
+                            "surface-container-highest": "#e5e2e1",
+                            "secondary": "#99462a",
+                            "surface-container-high": "#ebe7e6",
+                            "on-primary-fixed": "#1c1c1a",
+                            "tertiary": "#000000",
+                            "on-primary": "#ffffff",
+                            "secondary-container": "#fe9572",
+                            "dusty-gray": "#73726c",
+                            "graphite": "#3d3d3a",
+                            "surface-bright": "#fdf8f7",
+                            "on-tertiary-fixed-variant": "#484646",
+                            "on-background": "#1c1b1b",
+                            "on-secondary-fixed": "#390b00",
+                            "secondary-fixed-dim": "#ffb59e",
+                            "on-secondary-fixed-variant": "#7a2f15",
+                            "on-error-container": "#93000a",
+                            "snow-white": "#ffffff",
+                            "tertiary-container": "#1c1b1b",
+                            "error": "#ba1a1a",
+                            "surface-variant": "#e5e2e1",
+                            "on-surface": "#1c1b1b",
+                            "on-tertiary": "#ffffff",
+                            "on-surface-variant": "#464742",
+                            "on-tertiary-container": "#868383"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.6rem",
+                            "lg": "0.6rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "gap-lg": "32px",
+                            "section-xl": "40px",
+                            "container-max": "1200px",
+                            "gap-md": "24px",
+                            "unit": "8px",
+                            "gap-xs": "8px"
+                    },
+                    "fontFamily": {
+                            "h3": ["Lora"],
+                            "caption": ["Inter"],
+                            "h4": ["Lora"],
+                            "label-caps": ["Inter"],
+                            "body-md": ["Inter"],
+                            "body-sm": ["Inter"],
+                            "display": ["Lora"],
+                            "body-lg": ["Inter"],
+                            "h2": ["Lora"]
+                    },
+                    "fontSize": {
+                            "h3": ["24px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                            "caption": ["12px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                            "h4": ["18px", { "lineHeight": "1.33", "fontWeight": "400" }],
+                            "label-caps": ["11px", { "lineHeight": "1.33", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                            "body-md": ["15px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                            "body-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                            "display": ["56px", { "lineHeight": "1.2", "fontWeight": "330" }],
+                            "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                            "h2": ["30px", { "lineHeight": "1.33", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-vellum-white min-h-screen flex flex-col font-body-md text-body-md text-ink-black antialiased">
+<!-- TopNavBar -->
+<header class="bg-surface border-b border-parchment w-full top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-gap-lg max-w-container-max mx-auto h-16">
+<div class="font-display text-h3 font-normal text-ink-black">
+                DevDocs AI
+            </div>
+<nav class="hidden md:flex items-center gap-gap-md">
+<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Workspace</a>
+<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Documentation</a>
+<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Project Hub</a>
+<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Resources</a>
+</nav>
+<div class="flex items-center gap-gap-md">
+<a class="hidden md:inline-block font-label-caps text-label-caps text-ink-black hover:text-terra-cotta transition-colors duration-200 uppercase" href="#">Sign In</a>
+<a class="bg-ink-black text-on-primary font-label-caps text-label-caps py-2 px-4 rounded DEFAULT uppercase hover:opacity-90 transition-opacity font-medium" href="#">Get Started</a>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center py-section-xl px-gap-lg w-full max-w-container-max mx-auto text-center">
+<div class="max-w-3xl mx-auto flex flex-col items-center border border-parchment bg-surface p-section-xl rounded-lg">
+<!-- Core Typography Stack -->
+<h1 class="font-display text-display text-ink-black mb-gap-md">
+                DevDocs AI
+            </h1>
+<p class="font-h3 text-h3 text-ink-black mb-gap-xs">
+                AI-powered pre-build planning assistant for developers
+            </p>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-gap-lg">
+                Interview with AI before you code. Get a complete 10-file documentation bundle.
+            </p>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-gap-md items-center justify-center mb-section-xl w-full">
+<button class="w-full sm:w-auto bg-ink-black text-on-primary font-label-caps text-label-caps py-3 px-8 rounded DEFAULT uppercase transition-opacity hover:opacity-90 font-medium">
+                    Get Started
+                </button>
+<button class="w-full sm:w-auto bg-transparent border text-ink-black font-label-caps text-label-caps py-3 px-8 rounded DEFAULT uppercase hover:bg-surface-container transition-colors border-parchment font-normal">
+                    Sign In
+                </button>
+</div>
+<!-- Features Grid -->
+<div class="flex flex-col gap-gap-xs text-left w-full max-w-md border-t border-parchment pt-gap-md">
+<div class="flex items-start gap-gap-xs">
+<span class="material-symbols-outlined text-terra-cotta mt-1" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<span class="font-body-md text-body-md font-medium text-ink-black block">Structured Requirements Gathering</span>
+<span class="font-body-sm text-body-sm text-stone block">Ensure no edge cases are missed through guided inquiry.</span>
+</div>
+</div>
+<div class="flex items-start gap-gap-xs">
+<span class="material-symbols-outlined text-terra-cotta mt-1" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<span class="font-body-md text-body-md font-medium text-ink-black block">Automated Documentation Synthesis</span>
+<span class="font-body-sm text-body-sm text-stone block">Generate readmes, API specs, and component trees instantly.</span>
+</div>
+</div>
+<div class="flex items-start gap-gap-xs">
+<span class="material-symbols-outlined text-terra-cotta mt-1" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<span class="font-body-md text-body-md font-medium text-ink-black block">Scholarly Output Formatting</span>
+<span class="font-body-sm text-body-sm text-stone block">Clean, highly readable artifacts ready for immediate implementation.</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface border-t border-parchment w-full mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-gap-lg py-gap-md max-w-container-max mx-auto gap-gap-md text-center md:text-left">
+<div class="font-caption text-caption text-stone">
+                © 2024 DevDocs AI. Scholarly Rigor for Modern Code.
+            </div>
+<div class="flex flex-wrap justify-center gap-gap-md">
+<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Privacy Policy</a>
+<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Terms of Service</a>
+<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Documentation Guide</a>
+<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>
