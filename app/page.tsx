@@ -1,41 +1,102 @@
+import { TopNavBar } from '@/components/stitch/organisms/TopNavBar'
+import { Footer } from '@/components/stitch/organisms/Footer'
+import { Button } from '@/components/stitch/atoms/Button'
+import { Icon } from '@/components/stitch/atoms/Icon'
 import Link from 'next/link'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-center text-center space-y-8">
-        <div>
-          <h1 className="text-4xl font-bold mb-4">DevDocs AI</h1>
-          <p className="text-lg text-muted-foreground">
+    <div className="bg-stitch-vellum-white min-h-screen flex flex-col font-stitch-body-md text-stitch-body-md text-stitch-ink-black antialiased">
+      <TopNavBar variant="marketing" />
+
+      <main className="flex-grow flex flex-col items-center justify-center py-stitch-section-xl px-stitch-gap-lg w-full max-w-stitch-container-max mx-auto text-center">
+        <div className="max-w-3xl mx-auto flex flex-col items-center border border-stitch-parchment bg-stitch-surface p-stitch-section-xl rounded-lg">
+          {/* Core Typography Stack */}
+          <h1 className="font-stitch-display text-stitch-display text-stitch-ink-black mb-stitch-gap-md">
+            DevDocs AI
+          </h1>
+          <p className="font-stitch-h3 text-stitch-h3 text-stitch-ink-black mb-stitch-gap-xs">
             AI-powered pre-build planning assistant for developers
           </p>
-          <p className="mt-4 text-sm text-muted-foreground max-w-2xl mx-auto">
-            Interview with AI before you code. Get a complete 10-file documentation bundle
-            covering architecture, database, API contracts, testing, and deployment.
+          <p className="font-stitch-body-lg text-stitch-body-lg text-stitch-on-surface-variant max-w-2xl mb-stitch-gap-lg">
+            Interview with AI before you code. Get a complete 10-file
+            documentation bundle.
           </p>
-        </div>
 
-        <div className="flex gap-4 justify-center">
-          <Link
-            href="/signup"
-            className="rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Get Started
-          </Link>
-          <Link
-            href="/login"
-            className="rounded-md border border-input bg-background px-6 py-3 text-sm font-medium hover:bg-accent"
-          >
-            Sign In
-          </Link>
-        </div>
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-stitch-gap-md items-center justify-center mb-stitch-section-xl w-full">
+            <Link href="/signup" className="w-full sm:w-auto">
+              <Button variant="primary" size="lg" className="w-full uppercase">
+                Get Started
+              </Button>
+            </Link>
+            <Link href="/login" className="w-full sm:w-auto">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full uppercase"
+              >
+                Sign In
+              </Button>
+            </Link>
+          </div>
 
-        <div className="mt-12 text-xs text-muted-foreground">
-          <p>✓ Bring Your Own API Key (BYOK)</p>
-          <p>✓ Your key never leaves your browser</p>
-          <p>✓ Free tier: 3 projects</p>
+          {/* Features Grid */}
+          <div className="flex flex-col gap-stitch-gap-xs text-left w-full max-w-md border-t border-stitch-parchment pt-stitch-gap-md">
+            <div className="flex items-start gap-stitch-gap-xs">
+              <Icon
+                name="check_circle"
+                filled
+                size="md"
+                className="text-stitch-terra-cotta mt-1"
+              />
+              <div>
+                <span className="font-stitch-body-md text-stitch-body-md font-medium text-stitch-ink-black block">
+                  Structured Requirements Gathering
+                </span>
+                <span className="font-stitch-body-sm text-stitch-body-sm text-stitch-stone block">
+                  Ensure no edge cases are missed through guided inquiry.
+                </span>
+              </div>
+            </div>
+            <div className="flex items-start gap-stitch-gap-xs">
+              <Icon
+                name="check_circle"
+                filled
+                size="md"
+                className="text-stitch-terra-cotta mt-1"
+              />
+              <div>
+                <span className="font-stitch-body-md text-stitch-body-md font-medium text-stitch-ink-black block">
+                  Automated Documentation Synthesis
+                </span>
+                <span className="font-stitch-body-sm text-stitch-body-sm text-stitch-stone block">
+                  Generate readmes, API specs, and component trees instantly.
+                </span>
+              </div>
+            </div>
+            <div className="flex items-start gap-stitch-gap-xs">
+              <Icon
+                name="check_circle"
+                filled
+                size="md"
+                className="text-stitch-terra-cotta mt-1"
+              />
+              <div>
+                <span className="font-stitch-body-md text-stitch-body-md font-medium text-stitch-ink-black block">
+                  Scholarly Output Formatting
+                </span>
+                <span className="font-stitch-body-sm text-stitch-body-sm text-stitch-stone block">
+                  Clean, highly readable artifacts ready for immediate
+                  implementation.
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+
+      <Footer />
+    </div>
   )
 }
