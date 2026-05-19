@@ -62,6 +62,35 @@
   }
 }
 
+/* Landing Page Global Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --vellum: #faf9f5;
+  --vellum-dim: #f1edec;
+  --ink: #141413;
+  --onyx: #1f1e1d;
+  --graphite: #3d3d3a;
+  --dusty: #73726c;
+  --stone: #9c9a92;
+  --parchment: #dedcd1;
+  --snow: #ffffff;
+  --azure: #ccdbe8;
+  --terra: #d97757;
+  --terra-light: #f5e8e2;
+  --r: 9.6px;
+  --r-lg: 16px;
+  --r-hero: 24px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 /* Stitch Design System Styles */
 .stitch-scope .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;

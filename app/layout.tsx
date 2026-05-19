@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Lora } from 'next/font/google'
+import { Inter, Lora, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { ToastProvider } from '@/components/stitch/organisms/ToastProvider'
 
@@ -13,6 +13,12 @@ const lora = Lora({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-stitch-lora',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
   display: 'swap',
 })
 
@@ -53,7 +59,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${lora.variable} stitch-scope font-stitch-body-md text-stitch-body-md text-stitch-ink-black antialiased`}
+        className={`${inter.variable} ${lora.variable} ${jetbrainsMono.variable} stitch-scope font-stitch-body-md text-stitch-body-md text-stitch-ink-black antialiased`}
       >
         <ToastProvider>{children}</ToastProvider>
       </body>

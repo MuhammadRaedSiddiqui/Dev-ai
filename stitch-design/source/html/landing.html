@@ -1,202 +1,1064 @@
 <!DOCTYPE html>
-
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>DevDocs AI - Academic Planning</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Lora:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                            "ink-black": "#141413",
-                            "on-primary-fixed-variant": "#474745",
-                            "tertiary-fixed-dim": "#cac5c5",
-                            "surface-dim": "#ddd9d8",
-                            "tertiary-fixed": "#e6e1e1",
-                            "secondary-fixed": "#ffdbd0",
-                            "primary-fixed-dim": "#c9c6c4",
-                            "inverse-primary": "#c9c6c4",
-                            "surface-container": "#f1edec",
-                            "on-primary-container": "#858382",
-                            "outline-variant": "#c7c7c0",
-                            "on-error": "#ffffff",
-                            "inverse-surface": "#313030",
-                            "stone": "#9c9a92",
-                            "primary-fixed": "#e5e2e0",
-                            "surface": "#fdf8f7",
-                            "primary": "#000000",
-                            "primary-container": "#1c1c1a",
-                            "on-tertiary-fixed": "#1c1b1b",
-                            "terra-cotta": "#d97757",
-                            "inverse-on-surface": "#f4f0ef",
-                            "on-secondary-container": "#762c12",
-                            "vellum-white": "#faf9f5",
-                            "outline": "#767872",
-                            "surface-container-low": "#f7f3f2",
-                            "parchment": "#dedcd1",
-                            "onyx": "#1f1e1d",
-                            "pale-azure": "#ccdbe8",
-                            "surface-tint": "#5f5e5d",
-                            "on-secondary": "#ffffff",
-                            "error-container": "#ffdad6",
-                            "background": "#fdf8f7",
-                            "surface-container-lowest": "#ffffff",
-                            "surface-container-highest": "#e5e2e1",
-                            "secondary": "#99462a",
-                            "surface-container-high": "#ebe7e6",
-                            "on-primary-fixed": "#1c1c1a",
-                            "tertiary": "#000000",
-                            "on-primary": "#ffffff",
-                            "secondary-container": "#fe9572",
-                            "dusty-gray": "#73726c",
-                            "graphite": "#3d3d3a",
-                            "surface-bright": "#fdf8f7",
-                            "on-tertiary-fixed-variant": "#484646",
-                            "on-background": "#1c1b1b",
-                            "on-secondary-fixed": "#390b00",
-                            "secondary-fixed-dim": "#ffb59e",
-                            "on-secondary-fixed-variant": "#7a2f15",
-                            "on-error-container": "#93000a",
-                            "snow-white": "#ffffff",
-                            "tertiary-container": "#1c1b1b",
-                            "error": "#ba1a1a",
-                            "surface-variant": "#e5e2e1",
-                            "on-surface": "#1c1b1b",
-                            "on-tertiary": "#ffffff",
-                            "on-surface-variant": "#464742",
-                            "on-tertiary-container": "#868383"
-                    },
-                    "borderRadius": {
-                            "DEFAULT": "0.6rem",
-                            "lg": "0.6rem",
-                            "xl": "0.75rem",
-                            "full": "9999px"
-                    },
-                    "spacing": {
-                            "gap-lg": "32px",
-                            "section-xl": "40px",
-                            "container-max": "1200px",
-                            "gap-md": "24px",
-                            "unit": "8px",
-                            "gap-xs": "8px"
-                    },
-                    "fontFamily": {
-                            "h3": ["Lora"],
-                            "caption": ["Inter"],
-                            "h4": ["Lora"],
-                            "label-caps": ["Inter"],
-                            "body-md": ["Inter"],
-                            "body-sm": ["Inter"],
-                            "display": ["Lora"],
-                            "body-lg": ["Inter"],
-                            "h2": ["Lora"]
-                    },
-                    "fontSize": {
-                            "h3": ["24px", { "lineHeight": "1.33", "fontWeight": "400" }],
-                            "caption": ["12px", { "lineHeight": "1.33", "fontWeight": "400" }],
-                            "h4": ["18px", { "lineHeight": "1.33", "fontWeight": "400" }],
-                            "label-caps": ["11px", { "lineHeight": "1.33", "letterSpacing": "0.05em", "fontWeight": "500" }],
-                            "body-md": ["15px", { "lineHeight": "1.4", "fontWeight": "400" }],
-                            "body-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
-                            "display": ["56px", { "lineHeight": "1.2", "fontWeight": "330" }],
-                            "body-lg": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                            "h2": ["30px", { "lineHeight": "1.33", "fontWeight": "400" }]
-                    }
-                }
-            }
-        }</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevDocs AI — Plan before you build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@300;400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-    </style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --vellum: #faf9f5;
+    --vellum-dim: #f1edec;
+    --ink: #141413;
+    --onyx: #1f1e1d;
+    --graphite: #3d3d3a;
+    --dusty: #73726c;
+    --stone: #9c9a92;
+    --parchment: #dedcd1;
+    --snow: #ffffff;
+    --azure: #ccdbe8;
+    --terra: #d97757;
+    --terra-light: #f5e8e2;
+    --r: 9.6px;
+    --r-lg: 16px;
+    --r-hero: 24px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--vellum);
+    color: var(--graphite);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,249,245,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--parchment);
+    padding: 0 48px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Lora', serif;
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--graphite);
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 150ms ease;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(31,30,29,0.25);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 7px 16px;
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+  .btn-ghost:hover { border-color: rgba(31,30,29,0.5); }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--snow);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: var(--r);
+    border: none;
+    cursor: pointer;
+    transition: opacity 150ms ease;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary-lg {
+    background: var(--ink);
+    color: var(--snow);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: var(--r);
+    border: none;
+    cursor: pointer;
+    transition: opacity 150ms ease;
+    display: inline-block;
+    text-decoration: none;
+  }
+  .btn-primary-lg:hover { opacity: 0.85; }
+  .btn-ghost-lg {
+    background: transparent;
+    border: 1px solid rgba(31,30,29,0.25);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 12px 24px;
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: border-color 150ms ease;
+    display: inline-block;
+    text-decoration: none;
+  }
+  .btn-ghost-lg:hover { border-color: rgba(31,30,29,0.5); }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 16px;
+  }
+
+  /* ─── DISPLAY TYPE ─── */
+  .display {
+    font-family: 'Lora', serif;
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  h2.heading {
+    font-family: 'Lora', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  h3.subheading {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  h4.card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    margin-bottom: 6px;
+  }
+
+  /* ─── CONTAINER ─── */
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* ─── DIVIDER ─── */
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--parchment);
+    margin: 0;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 88px 0 80px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--graphite);
+    margin-top: 20px;
+    line-height: 1.55;
+    max-width: 480px;
+  }
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .hero-note {
+    font-size: 12px;
+    color: var(--stone);
+    margin-top: 12px;
+  }
+  .file-tree {
+    background: var(--onyx);
+    border-radius: var(--r-hero);
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #c9c6c4;
+    line-height: 1.8;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .file-tree .tree-header {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+  .file-tree .dir { color: #9c9a92; }
+  .file-tree .file { color: #c9c6c4; }
+  .file-tree .file span.ext { color: var(--terra); }
+
+  /* ─── PROBLEM SECTION ─── */
+  .section-problem {
+    padding: 80px 0;
+    background: var(--snow);
+    border-top: 1px solid var(--parchment);
+    border-bottom: 1px solid var(--parchment);
+  }
+  .problem-intro {
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+  .problem-intro p {
+    color: var(--graphite);
+    font-size: 16px;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .ba-card {
+    border: 1px solid var(--parchment);
+    border-radius: var(--r-lg);
+    padding: 28px;
+    background: var(--vellum);
+  }
+  .ba-card-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .ba-card.bad .ba-card-label { color: #b5392a; }
+  .ba-card.good .ba-card-label { color: #3a6b3a; }
+  .code-snippet {
+    background: var(--snow);
+    border: 1px solid var(--parchment);
+    border-radius: var(--r);
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--graphite);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .consequence-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .consequence-list li {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.45;
+  }
+  .consequence-list li .icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 14px;
+  }
+  .ba-card.bad .consequence-list li {
+    background: #fdf0ee;
+    color: #7a2a1a;
+  }
+  .ba-card.bad .consequence-list li .icon { color: #c0392b; }
+  .ba-card.good .consequence-list li {
+    background: #f0f7f0;
+    color: #2a4a2a;
+  }
+  .ba-card.good .consequence-list li .icon { color: #3a7a3a; }
+
+  /* ─── HOW IT WORKS ─── */
+  .section-how {
+    padding: 80px 0;
+  }
+  .section-how-intro {
+    margin-bottom: 56px;
+  }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    border: 1px solid var(--parchment);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .step-cell {
+    background: var(--snow);
+    padding: 32px;
+    border-right: 1px solid var(--parchment);
+    border-bottom: 1px solid var(--parchment);
+  }
+  .step-cell:nth-child(2n) { border-right: none; }
+  .step-cell:nth-last-child(-n+2) { border-bottom: none; }
+  .step-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--terra);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+  .step-cell h4 {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .step-cell p {
+    font-size: 14px;
+    color: var(--dusty);
+    line-height: 1.6;
+  }
+
+  /* ─── OUTPUT ─── */
+  .section-output {
+    padding: 80px 0;
+    background: var(--snow);
+    border-top: 1px solid var(--parchment);
+    border-bottom: 1px solid var(--parchment);
+  }
+  .output-intro { margin-bottom: 48px; }
+  .output-table {
+    border: 1px solid var(--parchment);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .output-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-bottom: 1px solid var(--parchment);
+    background: var(--vellum);
+    transition: background 150ms ease;
+  }
+  .output-row:last-child { border-bottom: none; }
+  .output-row:hover { background: var(--vellum-dim); }
+  .output-row:nth-child(even) { background: var(--snow); }
+  .output-row:nth-child(even):hover { background: #f3f0ef; }
+  .output-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    padding: 14px 20px;
+    border-right: 1px solid var(--parchment);
+    display: flex;
+    align-items: center;
+  }
+  .output-filename span.ext { color: var(--terra); }
+  .output-desc {
+    font-size: 13px;
+    color: var(--dusty);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+  }
+  .output-note {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--stone);
+    padding: 14px 20px;
+    background: var(--vellum-dim);
+    border-radius: var(--r);
+    border: 1px solid var(--parchment);
+  }
+
+  /* ─── BYOK ─── */
+  .section-byok {
+    padding: 80px 0;
+  }
+  .byok-intro { margin-bottom: 48px; }
+  .byok-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    border: 1px solid var(--parchment);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .byok-col {
+    padding: 32px;
+    background: var(--snow);
+    border-right: 1px solid var(--parchment);
+  }
+  .byok-col:last-child { border-right: none; }
+  .byok-col h4 {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .byok-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--terra);
+    margin-bottom: 16px;
+  }
+  .byok-col p {
+    font-size: 13px;
+    color: var(--dusty);
+    line-height: 1.65;
+  }
+  .byok-note {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--stone);
+    padding: 14px 20px;
+    background: var(--vellum-dim);
+    border-radius: var(--r);
+    border: 1px solid var(--parchment);
+  }
+
+  /* ─── PRICING ─── */
+  .section-pricing {
+    padding: 80px 0;
+    background: var(--snow);
+    border-top: 1px solid var(--parchment);
+    border-bottom: 1px solid var(--parchment);
+  }
+  .pricing-intro { margin-bottom: 48px; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .pricing-card {
+    border: 1px solid var(--parchment);
+    border-radius: var(--r-lg);
+    padding: 28px;
+    background: var(--vellum);
+    display: flex;
+    flex-direction: column;
+  }
+  .pricing-card.featured {
+    border-color: var(--ink);
+    background: var(--snow);
+    position: relative;
+  }
+  .featured-badge {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--snow);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .pricing-tier {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 8px;
+  }
+  .pricing-price {
+    font-family: 'Lora', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pricing-price-note {
+    font-size: 12px;
+    color: var(--stone);
+    margin-bottom: 20px;
+  }
+  .pricing-desc {
+    font-size: 13px;
+    color: var(--dusty);
+    margin-bottom: 20px;
+    line-height: 1.5;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--parchment);
+  }
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    flex: 1;
+    margin-bottom: 24px;
+  }
+  .pricing-features li {
+    font-size: 13px;
+    color: var(--graphite);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .pricing-features li::before {
+    content: '—';
+    color: var(--parchment);
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pricing-card .btn-primary-lg,
+  .pricing-card .btn-ghost-lg {
+    width: 100%;
+    text-align: center;
+    padding: 11px 16px;
+    font-size: 13px;
+  }
+
+  /* ─── FAQ ─── */
+  .section-faq {
+    padding: 80px 0;
+  }
+  .faq-intro { margin-bottom: 48px; }
+  .faq-list {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--parchment);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--parchment);
+    background: var(--snow);
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 20px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: background 150ms ease;
+  }
+  .faq-question:hover { background: var(--vellum); }
+  .faq-arrow {
+    color: var(--stone);
+    font-size: 16px;
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-answer {
+    display: none;
+    padding: 0 24px 20px;
+    font-size: 14px;
+    color: var(--dusty);
+    line-height: 1.7;
+    border-top: 1px solid var(--parchment);
+  }
+  .faq-item.open .faq-answer { display: block; }
+
+  /* ─── FINAL CTA ─── */
+  .section-cta {
+    background: var(--ink);
+    padding: 96px 0;
+  }
+  .cta-inner {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .section-cta .display {
+    color: var(--snow);
+    font-size: 48px;
+  }
+  .section-cta .sub {
+    font-size: 17px;
+    color: #9c9a92;
+    margin-top: 16px;
+    line-height: 1.55;
+  }
+  .cta-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 40px;
+  }
+  .section-cta .btn-primary-lg {
+    background: var(--snow);
+    color: var(--ink);
+  }
+  .section-cta .btn-primary-lg:hover { opacity: 0.88; }
+  .section-cta .btn-ghost-lg {
+    border-color: rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.75);
+  }
+  .section-cta .btn-ghost-lg:hover { border-color: rgba(255,255,255,0.5); }
+  .cta-note {
+    font-size: 12px;
+    color: #73726c;
+    margin-top: 16px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--vellum);
+    border-top: 1px solid var(--parchment);
+    padding: 32px 0;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .footer-wordmark {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--stone);
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--dusty);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .footer-links a:hover { color: var(--ink); }
+</style>
 </head>
-<body class="bg-vellum-white min-h-screen flex flex-col font-body-md text-body-md text-ink-black antialiased">
-<!-- TopNavBar -->
-<header class="bg-surface border-b border-parchment w-full top-0 sticky z-50">
-<div class="flex justify-between items-center w-full px-gap-lg max-w-container-max mx-auto h-16">
-<div class="font-display text-h3 font-normal text-ink-black">
-                DevDocs AI
-            </div>
-<nav class="hidden md:flex items-center gap-gap-md">
-<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Workspace</a>
-<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Documentation</a>
-<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Project Hub</a>
-<a class="font-body-md text-body-md text-stone hover:text-terra-cotta transition-colors duration-200" href="#">Resources</a>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">DevDocs AI</span>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#output">Output</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="btn-ghost">Sign In</button>
+    <button class="btn-primary">Get Started</button>
+  </div>
 </nav>
-<div class="flex items-center gap-gap-md">
-<a class="hidden md:inline-block font-label-caps text-label-caps text-ink-black hover:text-terra-cotta transition-colors duration-200 uppercase" href="#">Sign In</a>
-<a class="bg-ink-black text-on-primary font-label-caps text-label-caps py-2 px-4 rounded DEFAULT uppercase hover:opacity-90 transition-opacity font-medium" href="#">Get Started</a>
-</div>
-</div>
-</header>
-<!-- Main Content Canvas -->
-<main class="flex-grow flex flex-col items-center justify-center py-section-xl px-gap-lg w-full max-w-container-max mx-auto text-center">
-<div class="max-w-3xl mx-auto flex flex-col items-center border border-parchment bg-surface p-section-xl rounded-lg">
-<!-- Core Typography Stack -->
-<h1 class="font-display text-display text-ink-black mb-gap-md">
-                DevDocs AI
-            </h1>
-<p class="font-h3 text-h3 text-ink-black mb-gap-xs">
-                AI-powered pre-build planning assistant for developers
-            </p>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-gap-lg">
-                Interview with AI before you code. Get a complete 10-file documentation bundle.
-            </p>
-<!-- Action Buttons -->
-<div class="flex flex-col sm:flex-row gap-gap-md items-center justify-center mb-section-xl w-full">
-<button class="w-full sm:w-auto bg-ink-black text-on-primary font-label-caps text-label-caps py-3 px-8 rounded DEFAULT uppercase transition-opacity hover:opacity-90 font-medium">
-                    Get Started
-                </button>
-<button class="w-full sm:w-auto bg-transparent border text-ink-black font-label-caps text-label-caps py-3 px-8 rounded DEFAULT uppercase hover:bg-surface-container transition-colors border-parchment font-normal">
-                    Sign In
-                </button>
-</div>
-<!-- Features Grid -->
-<div class="flex flex-col gap-gap-xs text-left w-full max-w-md border-t border-parchment pt-gap-md">
-<div class="flex items-start gap-gap-xs">
-<span class="material-symbols-outlined text-terra-cotta mt-1" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-<div>
-<span class="font-body-md text-body-md font-medium text-ink-black block">Structured Requirements Gathering</span>
-<span class="font-body-sm text-body-sm text-stone block">Ensure no edge cases are missed through guided inquiry.</span>
-</div>
-</div>
-<div class="flex items-start gap-gap-xs">
-<span class="material-symbols-outlined text-terra-cotta mt-1" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-<div>
-<span class="font-body-md text-body-md font-medium text-ink-black block">Automated Documentation Synthesis</span>
-<span class="font-body-sm text-body-sm text-stone block">Generate readmes, API specs, and component trees instantly.</span>
-</div>
-</div>
-<div class="flex items-start gap-gap-xs">
-<span class="material-symbols-outlined text-terra-cotta mt-1" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-<div>
-<span class="font-body-md text-body-md font-medium text-ink-black block">Scholarly Output Formatting</span>
-<span class="font-body-sm text-body-sm text-stone block">Clean, highly readable artifacts ready for immediate implementation.</span>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="bg-surface border-t border-parchment w-full mt-auto">
-<div class="flex flex-col md:flex-row justify-between items-center w-full px-gap-lg py-gap-md max-w-container-max mx-auto gap-gap-md text-center md:text-left">
-<div class="font-caption text-caption text-stone">
-                © 2024 DevDocs AI. Scholarly Rigor for Modern Code.
-            </div>
-<div class="flex flex-wrap justify-center gap-gap-md">
-<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Privacy Policy</a>
-<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Terms of Service</a>
-<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Documentation Guide</a>
-<a class="font-caption text-caption text-stone hover:text-terra-cotta underline transition-all duration-200" href="#">Support</a>
-</div>
-</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <p class="section-label">Pre-build planning</p>
+        <h1 class="display">Your project,<br>fully planned before<br>you write line one.</h1>
+        <p class="hero-sub">Interview with AI. Get a complete 10-file documentation bundle. Feed it to Claude Code, Cursor, or Windsurf. Build without guessing.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary-lg">Get Started Free</a>
+          <a href="#how" class="btn-ghost-lg">See How It Works</a>
+        </div>
+        <p class="hero-note">Free with your own Anthropic API key. No subscription required.</p>
+      </div>
+      <div class="file-tree">
+        <p class="tree-header">Output bundle</p>
+        <div class="dir">docs/</div>
+        <div style="padding-left:16px">
+          <div class="file">PLANNING<span class="ext">.md</span></div>
+          <div class="file">ARCHITECTURE<span class="ext">.md</span></div>
+          <div class="file">DATABASE<span class="ext">.md</span></div>
+          <div class="file">API-CONTRACTS<span class="ext">.md</span></div>
+          <div class="file">ENV-STRATEGY<span class="ext">.md</span></div>
+          <div class="file">AUTH<span class="ext">.md</span></div>
+          <div class="file">TESTING<span class="ext">.md</span></div>
+          <div class="file">MONITORING<span class="ext">.md</span></div>
+          <div class="file">FRONTEND<span class="ext">.md</span></div>
+          <div class="file">DEPLOYMENT<span class="ext">.md</span></div>
+          <div class="file" style="color:#73726c; margin-top:8px">README<span class="ext">.md</span> <span style="color:#5f5e5d; font-size:11px">← start here</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROBLEM -->
+<section class="section-problem" id="problem">
+  <div class="container">
+    <div class="problem-intro">
+      <p class="section-label">The problem</p>
+      <h2 class="heading">Watch a rough idea become a complete architecture decision record.</h2>
+      <p>AI coding agents fail when planning is missing. Every undocumented decision — database schema, auth strategy, deployment target — becomes a broken build discovered mid-sprint. DevDocs AI surfaces every decision before development begins.</p>
+    </div>
+    <div class="before-after">
+      <div class="ba-card bad">
+        <p class="ba-card-label">✕ &nbsp;Without DevDocs AI</p>
+        <div class="code-snippet">Build me a SaaS app with user auth,<br>a dashboard, and Stripe payments.</div>
+        <ul class="consequence-list">
+          <li><span class="icon">✕</span>No schema — the agent guesses and gets it wrong</li>
+          <li><span class="icon">✕</span>Auth strategy undecided — JWT vs sessions resolved at random</li>
+          <li><span class="icon">✕</span>Stripe webhooks break because the strategy was never defined</li>
+          <li><span class="icon">✕</span>Three days of rework. Significant token waste.</li>
+        </ul>
+      </div>
+      <div class="ba-card good">
+        <p class="ba-card-label">✓ &nbsp;With DevDocs AI</p>
+        <div class="code-snippet">docs/README.md → 10 files loaded<br>Full architectural context present.</div>
+        <ul class="consequence-list">
+          <li><span class="icon">✓</span>Schema designed and indexed before a table is created</li>
+          <li><span class="icon">✓</span>Auth documented with provider, session, and RBAC decisions</li>
+          <li><span class="icon">✓</span>Stripe webhook strategy defined in ENV-STRATEGY.md</li>
+          <li><span class="icon">✓</span>Coding agent begins with full context. No guessing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section-how" id="how">
+  <div class="container">
+    <div class="section-how-intro">
+      <p class="section-label">How it works</p>
+      <h2 class="heading">Four steps between your idea<br>and a production-ready plan.</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-cell">
+        <p class="step-number">01 — Interview</p>
+        <h4>The AI asks every question you'd skip.</h4>
+        <p>Targeted questions across 10 planning domains. Architecture, database, auth, testing, deployment, and more. Every question is the one a senior developer would ask before writing a line of code.</p>
+      </div>
+      <div class="step-cell">
+        <p class="step-number">02 — Recommend</p>
+        <h4>Opinionated, not neutral.</h4>
+        <p>Based on your constraints — team size, timeline, budget, scale — the AI recommends architecture with justification. It argues for a monolith over microservices when that's the right call. It thinks the way a senior developer thinks.</p>
+      </div>
+      <div class="step-cell">
+        <p class="step-number">03 — Generate</p>
+        <h4>Ten files. Every decision documented.</h4>
+        <p>All 10 documentation files generated simultaneously. Each follows a strict markdown format optimised for AI coding agent consumption. Edit any file in-app before exporting — regenerate single sections without rerunning the full interview.</p>
+      </div>
+      <div class="step-cell">
+        <p class="step-number">04 — Export &amp; Build</p>
+        <h4>Drop in. Point. Build.</h4>
+        <p>Download the complete documentation bundle as a ZIP. Drop the docs/ folder into your project root. Point your coding agent at README.md and start building with full architectural context already loaded.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- OUTPUT -->
+<section class="section-output" id="output">
+  <div class="container">
+    <div class="output-intro">
+      <p class="section-label">The output</p>
+      <h2 class="heading">Ten files. Nothing left<br>for the agent to guess.</h2>
+    </div>
+    <div class="output-table">
+      <div class="output-row">
+        <div class="output-filename">PLANNING<span class="ext">.md</span></div>
+        <div class="output-desc">Project scope, MVP definition, success metrics, timeline</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">ARCHITECTURE<span class="ext">.md</span></div>
+        <div class="output-desc">Tech stack decisions, architecture decision records, component responsibilities</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">DATABASE<span class="ext">.md</span></div>
+        <div class="output-desc">Schema design, migration strategy, indexing plan, soft delete policy</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">API-CONTRACTS<span class="ext">.md</span></div>
+        <div class="output-desc">Endpoint definitions, request/response shapes, authentication per route</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">ENV-STRATEGY<span class="ext">.md</span></div>
+        <div class="output-desc">Environment list, secrets management, CI/CD gate definitions</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">AUTH<span class="ext">.md</span></div>
+        <div class="output-desc">Auth provider, session strategy, token storage, RBAC model</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">TESTING<span class="ext">.md</span></div>
+        <div class="output-desc">Testing pyramid, tool choices, coverage targets, CI integration</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">MONITORING<span class="ext">.md</span></div>
+        <div class="output-desc">Four golden signals, alert thresholds, error tracking, health checks</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">FRONTEND<span class="ext">.md</span></div>
+        <div class="output-desc">Design tokens, component architecture, state management pattern, a11y targets</div>
+      </div>
+      <div class="output-row">
+        <div class="output-filename">DEPLOYMENT<span class="ext">.md</span></div>
+        <div class="output-desc">Hosting platform, deployment method, rollback strategy, scaling triggers</div>
+      </div>
+    </div>
+    <p class="output-note">Every file is editable in-app before export. Regenerate any section without rerunning the full interview.</p>
+  </div>
+</section>
+
+<!-- BYOK -->
+<section class="section-byok" id="byok">
+  <div class="container">
+    <div class="byok-intro">
+      <p class="section-label">How billing works</p>
+      <h2 class="heading">Bring your own key.<br>Pay nothing to us. Build everything.</h2>
+    </div>
+    <div class="byok-cols">
+      <div class="byok-col">
+        <p class="byok-price">$0 / free</p>
+        <h4>Free with BYOK</h4>
+        <p>You supply your Anthropic API key. All AI calls go directly from your browser to the Anthropic API. Your key never touches our servers. Typical session costs $0.50–$1.00 in API usage.</p>
+      </div>
+      <div class="byok-col">
+        <p class="byok-price">$12 / month</p>
+        <h4>Pro — hosted key</h4>
+        <p>We manage the API key. No Anthropic account required. Unlimited projects, PDF export, project versioning, and email support. Upgrade when your BYOK spend exceeds $12/month.</p>
+      </div>
+      <div class="byok-col">
+        <p class="byok-price">$35 / seat / month</p>
+        <h4>Team — shared workspaces</h4>
+        <p>Everything in Pro. Shared team workspaces, role-based permissions, admin dashboard, SSO, and audit logs. For small teams building together.</p>
+      </div>
+    </div>
+    <p class="byok-note">The free tier is complete. All 10 documentation domains. All templates. ZIP export. No feature gates.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PRICING -->
+<section class="section-pricing" id="pricing">
+  <div class="container">
+    <div class="pricing-intro">
+      <p class="section-label">Pricing</p>
+      <h2 class="heading">Simple pricing.</h2>
+    </div>
+    <div class="pricing-grid">
+
+      <div class="pricing-card">
+        <p class="pricing-tier">Free</p>
+        <p class="pricing-price">$0</p>
+        <p class="pricing-price-note">forever</p>
+        <p class="pricing-desc">For developers validating the approach. Full product, your own API key.</p>
+        <ul class="pricing-features">
+          <li>3 projects</li>
+          <li>All 10 documentation domains</li>
+          <li>All project templates</li>
+          <li>ZIP export</li>
+          <li>Share links</li>
+          <li>BYOK only</li>
+        </ul>
+        <a href="#" class="btn-ghost-lg">Get Started Free</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <span class="featured-badge">Most popular</span>
+        <p class="pricing-tier">Pro</p>
+        <p class="pricing-price">$12</p>
+        <p class="pricing-price-note">per month</p>
+        <p class="pricing-desc">For developers who build regularly and want zero API key friction.</p>
+        <ul class="pricing-features">
+          <li>Unlimited projects</li>
+          <li>Hosted API key — no BYOK</li>
+          <li>Project versioning</li>
+          <li>PDF export</li>
+          <li>Priority processing</li>
+          <li>Email support</li>
+        </ul>
+        <a href="#" class="btn-primary-lg">Start Pro</a>
+      </div>
+
+      <div class="pricing-card">
+        <p class="pricing-tier">Team</p>
+        <p class="pricing-price">$35</p>
+        <p class="pricing-price-note">per seat / month</p>
+        <p class="pricing-desc">For small teams building and documenting together.</p>
+        <ul class="pricing-features">
+          <li>Everything in Pro</li>
+          <li>Team workspaces</li>
+          <li>Shared projects</li>
+          <li>Admin dashboard</li>
+          <li>SSO + audit logs</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="#" class="btn-ghost-lg">Contact Us</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-faq" id="faq">
+  <div class="container">
+    <div class="faq-intro">
+      <p class="section-label">Common questions</p>
+      <h2 class="heading">Common questions.</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is my API key secure?
+          <span class="faq-arrow">↓</span>
+        </button>
+        <div class="faq-answer">Your key is stored in your browser's localStorage only. It never leaves your browser — all Anthropic API calls are made client-side, directly from your browser to Anthropic. We never see, log, or store your key on our servers. This is technically enforced, not just a policy statement.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          How long does an interview take?
+          <span class="faq-arrow">↓</span>
+        </button>
+        <div class="faq-answer">15–30 minutes for a typical project. Complex projects with multiple integrations take longer. The interview is designed to feel like a conversation with a senior developer, not a form. You can skip domains that don't apply to your project type.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Can I edit the generated documentation?
+          <span class="faq-arrow">↓</span>
+        </button>
+        <div class="faq-answer">Yes. Every file is fully editable in-app before you export. You can also regenerate any individual file without rerunning the full interview if you change your mind about a decision.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Does this work with Claude Code, Cursor, and Windsurf?
+          <span class="faq-arrow">↓</span>
+        </button>
+        <div class="faq-answer">Yes. The documentation bundle is structured markdown optimised for AI coding agent consumption. Drop the docs/ folder into your project root and point your agent at the README.md. The agent reads full architectural context before writing a line of code.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What if I already started my project?
+          <span class="faq-arrow">↓</span>
+        </button>
+        <div class="faq-answer">DevDocs AI is designed for pre-build planning, but running the interview on an existing project is still useful for documenting decisions already made and identifying gaps. Several users have used it mid-project to recover from undocumented architecture.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section-cta">
+  <div class="container">
+    <div class="cta-inner">
+      <h2 class="display">Stop discovering architecture decisions mid-build.</h2>
+      <p class="sub">Plan completely. Build confidently. Ship without rework.</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary-lg">Get Started Free</a>
+        <a href="#output" class="btn-ghost-lg">See the Output</a>
+      </div>
+      <p class="cta-note">Free with your Anthropic API key. No credit card required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-wordmark">DevDocs AI</span>
+        <span class="footer-copy">© 2026 DevDocs AI. All rights reserved.</span>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+      <ul class="footer-links">
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Twitter / X</a></li>
+      </ul>
+    </div>
+  </div>
 </footer>
-</body></html>
+
+<script>
+function toggleFaq(btn) {
+  var item = btn.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
