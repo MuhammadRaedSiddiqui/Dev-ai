@@ -1,36 +1,180 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { SideNavBar } from '@/components/stitch/organisms/SideNavBar'
+import { ProjectCard } from '@/components/stitch/molecules/ProjectCard'
+import { Button } from '@/components/stitch/atoms/Button'
+import { Icon } from '@/components/stitch/atoms/Icon'
 
-  if (!user) {
-    redirect('/login')
+interface Project {
+  id: string
+  name: string
+  project_type: string
+  status: 'in_progress' | 'complete' | 'archived'
+  interview_data: any
+  updated_at: string
+}
+
+export default function DashboardPage() {
+  const router = useRouter()
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchProjects()
+  }, [])
+
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('/api/projects')
+      if (response.ok) {
+        const data = await response.json()
+        setProjects(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch projects:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleOpenProject = (id: string) => {
+    const project = projects.find((p) => p.id === id)
+    if (project?.status === 'complete') {
+      router.push(`/project/${id}/review`)
+    } else {
+      router.push(`/project/${id}/interview`)
+    }
+  }
+
+  const handleDeleteProject = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/projects/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        // Remove from UI
+        setProjects(projects.filter((p) => p.id !== id))
+
+        // TODO: Show undo toast
+        // For now, just refresh after a delay
+        setTimeout(() => {
+          fetchProjects()
+        }, 5000)
+      }
+    } catch (error) {
+      console.error('Failed to delete project:', error)
+    }
+  }
+
+  const handleNewProject = () => {
+    router.push('/onboarding')
+  }
+
+  const formatUpdatedAt = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+    const diffDays = Math.floor(diffHours / 24)
+
+    if (diffHours < 1) return 'Updated just now'
+    if (diffHours < 24) return `Updated ${diffHours}h ago`
+    if (diffDays < 7) return `Updated ${diffDays}d ago`
+    return `Updated ${date.toLocaleDateString()}`
+  }
+
+  const getProjectDescription = (project: Project) => {
+    // Extract description from interview data or use default
+    return (
+      project.interview_data?.description ||
+      `${project.project_type} project documentation in progress`
+    )
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="mt-2 text-muted-foreground">
-          Welcome back! Your projects will appear here.
-        </p>
-      </div>
+    <div className="bg-stitch-background text-stitch-ink-black font-stitch-body-md antialiased min-h-screen flex">
+      <SideNavBar
+        currentPath="/dashboard"
+        onNewProject={handleNewProject}
+      />
 
-      <div className="rounded-lg border border-border bg-card p-8 text-center">
-        <div className="mx-auto max-w-md">
-          <h2 className="text-xl font-semibold">No projects yet</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Get started by creating your first documentation bundle.
-          </p>
-          <button className="mt-6 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-            Create Project
-          </button>
-        </div>
-      </div>
+      {/* Main Content Canvas */}
+      <main className="ml-64 flex-1 p-stitch-section-xl max-w-stitch-container-max mx-auto">
+        {/* Header Area */}
+        <header className="flex justify-between items-end mb-stitch-gap-lg border-b border-stitch-parchment pb-stitch-gap-md">
+          <div>
+            <h1 className="font-stitch-display text-stitch-display text-stitch-ink-black tracking-tight">
+              Your Projects
+            </h1>
+            <p className="font-stitch-body-lg text-stitch-body-lg text-stitch-stone mt-2 max-w-2xl">
+              Manage your active documentation repositories and editorial drafts.
+            </p>
+          </div>
+        </header>
+
+        {/* Projects Grid */}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Icon name="progress_activity" className="animate-spin text-stitch-stone" size="xl" />
+          </div>
+        ) : projects.length === 0 ? (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="w-16 h-16 bg-stitch-secondary-fixed/30 rounded-full flex items-center justify-center mb-4">
+              <Icon name="post_add" size="xl" className="text-stitch-terra-cotta" />
+            </div>
+            <h3 className="font-stitch-h3 text-stitch-h3 text-stitch-ink-black mb-2">
+              No projects yet
+            </h3>
+            <p className="font-stitch-body-md text-stitch-body-md text-stitch-stone max-w-md mb-6">
+              Initialize a new academic structure for your documentation. Start by creating your first project.
+            </p>
+            <Button variant="primary" size="md" onClick={handleNewProject}>
+              Create Your First Project
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-stitch-gap-md">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                id={project.id}
+                name={project.name}
+                type={project.project_type}
+                status={project.status}
+                description={getProjectDescription(project)}
+                updatedAt={formatUpdatedAt(project.updated_at)}
+                onOpen={handleOpenProject}
+                onDelete={handleDeleteProject}
+              />
+            ))}
+
+            {/* Create New Card */}
+            <button
+              onClick={handleNewProject}
+              className="bg-stitch-surface-container border border-dashed border-stitch-outline-variant p-stitch-gap-md flex flex-col items-center justify-center min-h-[220px] rounded-stitch-DEFAULT hover:bg-stitch-surface-container-high hover:border-stitch-outline transition-all duration-300 group text-center"
+            >
+              <div className="w-16 h-16 bg-stitch-secondary-fixed/30 rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <Icon name="post_add" size="xl" className="text-stitch-terra-cotta" />
+              </div>
+              <h3 className="font-stitch-h4 text-stitch-h4 text-stitch-ink-black mb-1">
+                Create Project
+              </h3>
+              <p className="font-stitch-body-sm text-stitch-body-sm text-stitch-stone max-w-[200px]">
+                Initialize a new academic structure for your documentation.
+              </p>
+            </button>
+          </div>
+        )}
+      </main>
     </div>
   )
 }
