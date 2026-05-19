@@ -1,157 +1,263 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import ExportButton from '@/components/review/ExportButton'
+import { useEffect, useState, useMemo } from 'react'
+import { useParams } from 'next/navigation'
+import { Button } from '@/components/stitch/atoms/Button'
+import { Icon } from '@/components/stitch/atoms/Icon'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { cn } from '@/lib/utils'
 
-type FileName =
-  | 'PLANNING.md'
-  | 'ARCHITECTURE.md'
-  | 'DATABASE.md'
-  | 'API-CONTRACTS.md'
-  | 'ENV-STRATEGY.md'
-  | 'AUTH.md'
-  | 'TESTING.md'
-  | 'MONITORING.md'
-  | 'FRONTEND.md'
-  | 'DEPLOYMENT.md'
-
-const FILE_TABS: { name: FileName; label: string }[] = [
-  { name: 'PLANNING.md', label: 'Planning' },
-  { name: 'ARCHITECTURE.md', label: 'Architecture' },
-  { name: 'DATABASE.md', label: 'Database' },
-  { name: 'API-CONTRACTS.md', label: 'API' },
-  { name: 'ENV-STRATEGY.md', label: 'Environment' },
-  { name: 'AUTH.md', label: 'Auth' },
-  { name: 'TESTING.md', label: 'Testing' },
-  { name: 'MONITORING.md', label: 'Monitoring' },
-  { name: 'FRONTEND.md', label: 'Frontend' },
-  { name: 'DEPLOYMENT.md', label: 'Deployment' },
+const DOCUMENTATION_FILES = [
+  'PLANNING.md',
+  'ARCHITECTURE.md',
+  'DATABASE.md',
+  'API-CONTRACTS.md',
+  'ENV-STRATEGY.md',
+  'AUTH.md',
+  'TESTING.md',
+  'MONITORING.md',
+  'FRONTEND.md',
+  'DEPLOYMENT.md',
 ]
 
-/**
- * Review Page
- *
- * Allows users to review and export their completed documentation bundle.
- * Shows all 10 files with markdown preview.
- */
 export default function ReviewPage() {
   const params = useParams()
-  const router = useRouter()
   const projectId = params.id as string
 
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [project, setProject] = useState<any>(null)
   const [bundle, setBundle] = useState<any>(null)
-  const [activeTab, setActiveTab] = useState<FileName>('PLANNING.md')
+  const [activeFile, setActiveFile] = useState('PLANNING.md')
+  const [editedContent, setEditedContent] = useState<Record<string, string>>({})
+  const [loading, setLoading] = useState(true)
+  const [exporting, setExporting] = useState(false)
+  const [sharing, setSharing] = useState(false)
 
+  // Load bundle
   useEffect(() => {
-    async function loadData() {
+    const loadBundle = async () => {
       try {
-        // Fetch project
-        const projectResponse = await fetch(`/api/projects/${projectId}`)
-        if (!projectResponse.ok) {
-          throw new Error('Project not found')
+        const response = await fetch(`/api/projects/${projectId}/bundle`)
+        if (response.ok) {
+          const data = await response.json()
+          setBundle(data)
+          setEditedContent(data.files || {})
         }
-        const projectData = await projectResponse.json()
-        setProject(projectData)
-
-        // Fetch bundle
-        const bundleResponse = await fetch(`/api/projects/${projectId}/bundle`)
-        if (!bundleResponse.ok) {
-          throw new Error('No documentation bundle found. Complete the interview first.')
-        }
-        const bundleData = await bundleResponse.json()
-        setBundle(bundleData)
-
-        setLoading(false)
-      } catch (err) {
-        console.error('Load error:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load documentation')
+      } catch (error) {
+        console.error('Failed to load bundle:', error)
+      } finally {
         setLoading(false)
       }
     }
 
-    loadData()
+    loadBundle()
   }, [projectId])
+
+  // Debounced save
+  const debouncedSave = useMemo(
+    () => {
+      let timeoutId: NodeJS.Timeout
+      return (files: Record<string, string>) => {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(async () => {
+          try {
+            await fetch(`/api/projects/${projectId}/bundle`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ files }),
+            })
+          } catch (error) {
+            console.error('Failed to save bundle:', error)
+          }
+        }, 2000)
+      }
+    },
+    [projectId]
+  )
+
+  // Handle file edit
+  const handleFileChange = (filename: string, content: string) => {
+    const updatedFiles = { ...editedContent, [filename]: content }
+    setEditedContent(updatedFiles)
+    debouncedSave(updatedFiles)
+  }
+
+  // Export ZIP
+  const handleExport = async () => {
+    setExporting(true)
+    try {
+      const response = await fetch(`/api/export/${projectId}`)
+      const blob = await response.blob()
+
+      // Trigger download
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `devdocs-${projectId}.zip`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Failed to export:', error)
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  // Create share link
+  const handleShare = async () => {
+    setSharing(true)
+    try {
+      const response = await fetch('/api/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bundle_id: bundle.id }),
+      })
+
+      if (response.ok) {
+        const { token } = await response.json()
+        const shareUrl = `${window.location.origin}/share/${token}`
+
+        // Copy to clipboard
+        await navigator.clipboard.writeText(shareUrl)
+        alert('Share link copied to clipboard!')
+      }
+    } catch (error) {
+      console.error('Failed to create share link:', error)
+    } finally {
+      setSharing(false)
+    }
+  }
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-sm text-muted-foreground">Loading documentation...</div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Icon name="progress_activity" className="animate-spin text-stitch-stone" size="xl" />
       </div>
     )
   }
 
-  if (error) {
-    return (
-      <div className="flex h-screen items-center justify-center p-4">
-        <div className="max-w-md space-y-4 text-center">
-          <div className="text-destructive">{error}</div>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Back to Dashboard
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  const currentContent = bundle?.files?.[activeTab] || ''
+  const currentContent = editedContent[activeFile] || ''
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="bg-stitch-vellum-white min-h-screen flex flex-col">
       {/* Header */}
-      <div className="border-b border-border bg-background p-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <header className="border-b border-stitch-parchment bg-stitch-surface px-stitch-gap-lg py-stitch-gap-md">
+        <div className="flex justify-between items-center max-w-[1440px] mx-auto">
           <div>
-            <h1 className="text-xl font-bold">{project?.name}</h1>
-            <p className="text-sm text-muted-foreground">Documentation Bundle Review</p>
+            <h1 className="font-stitch-h3 text-stitch-h3 text-stitch-ink-black">
+              Documentation Review
+            </h1>
+            <p className="font-stitch-body-sm text-stitch-body-sm text-stitch-stone mt-1">
+              Review and edit your generated documentation bundle
+            </p>
           </div>
-          <div className="flex items-center space-x-4">
-            <ExportButton projectId={projectId} projectName={project?.name || 'project'} />
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent"
+          <div className="flex gap-stitch-gap-md">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleShare}
+              loading={sharing}
+              icon="share"
             >
-              Back to Dashboard
-            </button>
+              Share
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleExport}
+              loading={exporting}
+              icon="download"
+            >
+              Export ZIP
+            </Button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* File Tabs */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex space-x-1 overflow-x-auto p-2">
-            {FILE_TABS.map((tab) => (
-              <button
-                key={tab.name}
-                onClick={() => setActiveTab(tab.name)}
-                className={`whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  activeTab === tab.name
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      <div className="border-b border-stitch-parchment bg-stitch-surface px-stitch-gap-lg overflow-x-auto">
+        <div className="flex gap-2 max-w-[1440px] mx-auto">
+          {DOCUMENTATION_FILES.map((filename) => (
+            <button
+              key={filename}
+              onClick={() => setActiveFile(filename)}
+              className={cn(
+                'px-4 py-2 font-stitch-body-sm text-stitch-body-sm border-b-2 transition-colors whitespace-nowrap',
+                activeFile === filename
+                  ? 'border-stitch-ink-black text-stitch-ink-black font-medium'
+                  : 'border-transparent text-stitch-stone hover:text-stitch-ink-black'
+              )}
+            >
+              {filename}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto bg-muted/10 p-6">
-        <div className="mx-auto max-w-4xl">
-          <div className="rounded-lg border border-border bg-card p-8">
-            <div className="prose prose-sm max-w-none dark:prose-invert">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{currentContent}</ReactMarkdown>
+      {/* Split Pane Editor */}
+      <div className="flex-grow flex overflow-hidden max-w-[1440px] mx-auto w-full">
+        {/* Left: Markdown Editor */}
+        <div className="w-1/2 border-r border-stitch-parchment flex flex-col">
+          <div className="px-stitch-gap-md py-stitch-unit border-b border-stitch-parchment bg-stitch-surface flex justify-between items-center">
+            <span className="font-stitch-label-caps text-stitch-label-caps text-stitch-stone uppercase">
+              Markdown Editor
+            </span>
+            <Icon name="edit" size="sm" className="text-stitch-stone" />
+          </div>
+          <textarea
+            value={currentContent}
+            onChange={(e) => handleFileChange(activeFile, e.target.value)}
+            className="flex-grow p-stitch-gap-md font-mono text-stitch-body-sm text-stitch-ink-black bg-stitch-snow-white resize-none focus:outline-none"
+            placeholder="Start editing your documentation..."
+          />
+        </div>
+
+        {/* Right: Preview */}
+        <div className="w-1/2 flex flex-col bg-stitch-vellum-white">
+          <div className="px-stitch-gap-md py-stitch-unit border-b border-stitch-parchment bg-stitch-surface flex justify-between items-center">
+            <span className="font-stitch-label-caps text-stitch-label-caps text-stitch-stone uppercase">
+              Preview
+            </span>
+            <Icon name="visibility" size="sm" className="text-stitch-stone" />
+          </div>
+          <div className="flex-grow overflow-y-auto p-stitch-gap-md">
+            <div className="prose prose-sm max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="font-stitch-h2 text-stitch-h2 font-stitch-display text-stitch-ink-black mb-stitch-gap-md border-b border-stitch-parchment pb-stitch-unit">
+                      {children}
+                    </h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="font-stitch-h3 text-stitch-h3 text-stitch-ink-black mt-stitch-gap-md mb-stitch-unit">
+                      {children}
+                    </h2>
+                  ),
+                  p: ({ children }) => (
+                    <p className="font-stitch-body-md text-stitch-body-md text-stitch-on-surface-variant mb-stitch-gap-md">
+                      {children}
+                    </p>
+                  ),
+                  code: ({ inline, children, ...props }: any) =>
+                    inline ? (
+                      <code
+                        className="bg-stitch-surface-container-low border border-stitch-parchment px-1 py-0.5 rounded font-mono text-stitch-caption"
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    ) : (
+                      <div className="bg-stitch-surface-container-low border border-stitch-parchment p-stitch-gap-xs mb-stitch-gap-md font-mono text-stitch-caption overflow-x-auto rounded-[9.6px]">
+                        <pre>
+                          <code {...props}>{children}</code>
+                        </pre>
+                      </div>
+                    ),
+                }}
+              >
+                {currentContent}
+              </ReactMarkdown>
             </div>
           </div>
         </div>
