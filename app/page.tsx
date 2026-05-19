@@ -3,6 +3,41 @@ import { Footer } from '@/components/stitch/organisms/Footer'
 import { Button } from '@/components/stitch/atoms/Button'
 import { Icon } from '@/components/stitch/atoms/Icon'
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'DevDocs AI — AI-Powered Pre-Build Planning Assistant',
+  description:
+    'Interview with AI before you code. Generate comprehensive 10-file documentation bundles covering architecture, database, API contracts, testing, and deployment.',
+  keywords: [
+    'AI documentation',
+    'software planning',
+    'technical documentation',
+    'architecture documentation',
+    'API documentation',
+    'development planning',
+  ],
+  authors: [{ name: 'DevDocs AI' }],
+  openGraph: {
+    title: 'DevDocs AI — AI-Powered Pre-Build Planning Assistant',
+    description:
+      'Interview with AI before you code. Get structured documentation instantly.',
+    type: 'website',
+    url: 'https://devdocs.ai',
+    siteName: 'DevDocs AI',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DevDocs AI — AI-Powered Pre-Build Planning',
+    description:
+      'Interview with AI before you code. Generate comprehensive documentation bundles.',
+    creator: '@devdocsai',
+  },
+  alternates: {
+    canonical: 'https://devdocs.ai',
+  },
+}
 
 export default function Home() {
   return (
