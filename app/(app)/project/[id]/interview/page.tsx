@@ -3,212 +3,200 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useInterviewStore } from '@/store/interview'
-import { createAnthropicClient } from '@/lib/anthropic/client'
-import { streamInterviewResponse, getStreamErrorMessage } from '@/lib/anthropic/streaming'
-import ChatPanel from '@/components/interview/ChatPanel'
-import PreviewPanel from '@/components/interview/PreviewPanel'
-import DomainProgress from '@/components/interview/DomainProgress'
+import { createClient as createAnthropicClient } from '@anthropic-ai/sdk'
+import { DomainProgressPanel } from '@/components/stitch/organisms/DomainProgressPanel'
+import { ChatInterface } from '@/components/stitch/organisms/ChatInterface'
+import { PreviewPanel } from '@/components/stitch/organisms/PreviewPanel'
+import { detectDomainCompletion } from '@/lib/interview/completion'
 
-/**
- * Interview Page
- *
- * Main interview screen with split-pane layout:
- * - Left: Chat conversation with AI
- * - Right: Live documentation preview
- * - Sidebar: Domain progress tracker
- */
 export default function InterviewPage() {
   const params = useParams()
   const router = useRouter()
   const projectId = params.id as string
 
-  const {
-    initializeSession,
-    addUserMessage,
-    addAssistantMessage,
-    startStreaming,
-    stopStreaming,
-    completeDomain,
-    resumeFromSaved,
-    toJSON,
-  } = useInterviewStore()
+  const interviewStore = useInterviewStore()
+  const [error, setError] = useState('')
+  const [initialized, setInitialized] = useState(false)
 
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [systemPrompt, setSystemPrompt] = useState<string | null>(null)
-  const [anthropicClient, setAnthropicClient] = useState<any>(null)
-
-  // Initialize session on mount
+  // Initialize session
   useEffect(() => {
-    async function initialize() {
+    const initSession = async () => {
       try {
-        // Fetch session init data (system prompt)
-        const response = await fetch('/api/session/init', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ projectId }),
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to initialize session')
+        // Fetch system prompt from server
+        const sessionResponse = await fetch('/api/session/init')
+        if (!sessionResponse.ok) {
+          throw new Error('Failed to fetch system prompt')
         }
+        const { systemPrompt } = await sessionResponse.json()
 
-        const data = await response.json()
-        setSystemPrompt(data.systemPrompt)
-
-        // Create Anthropic client
-        const client = await createAnthropicClient()
-        setAnthropicClient(client)
-
-        // Fetch existing project data to check for saved interview
+        // Load saved interview data
         const projectResponse = await fetch(`/api/projects/${projectId}`)
-        if (projectResponse.ok) {
-          const project = await projectResponse.json()
+        if (!projectResponse.ok) {
+          throw new Error('Failed to load project')
+        }
+        const project = await projectResponse.json()
 
-          if (project.interview_data && Object.keys(project.interview_data).length > 0) {
-            // Resume from saved state
-            resumeFromSaved(project.interview_data)
-          } else {
-            // Initialize new session
-            initializeSession(projectId, data.systemPrompt)
-          }
+        // Initialize or resume interview
+        if (
+          project.interview_data?.conversationHistory &&
+          project.interview_data.conversationHistory.length > 0
+        ) {
+          interviewStore.resumeFromSaved(project.interview_data)
         } else {
-          // Initialize new session
-          initializeSession(projectId, data.systemPrompt)
+          interviewStore.initializeSession(projectId, systemPrompt)
         }
 
-        setLoading(false)
+        setInitialized(true)
       } catch (err) {
-        console.error('Initialization error:', err)
-        setError(err instanceof Error ? err.message : 'Failed to initialize interview')
-        setLoading(false)
+        setError(
+          err instanceof Error ? err.message : 'Failed to initialize session'
+        )
       }
     }
 
-    initialize()
-  }, [projectId, initializeSession, resumeFromSaved])
+    initSession()
+  }, [projectId])
 
-  // Auto-save interview data when domains complete
-  useEffect(() => {
-    const saveInterviewData = async () => {
-      try {
-        const interviewData = toJSON()
+  // Send message
+  const handleSendMessage = async (content: string) => {
+    setError('')
 
-        await fetch(`/api/projects/${projectId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interview_data: interviewData }),
-        })
-      } catch (err) {
-        console.error('Failed to save interview data:', err)
-      }
-    }
+    // Add user message
+    interviewStore.addUserMessage(content)
 
-    // Debounce saves
-    const timeoutId = setTimeout(saveInterviewData, 2000)
-    return () => clearTimeout(timeoutId)
-  }, [projectId, toJSON])
-
-  const handleSendMessage = async (message: string) => {
-    if (!systemPrompt) {
-      setError('Interview session not initialized')
+    // Get API key from localStorage
+    const apiKey = localStorage.getItem('anthropic_api_key')
+    if (!apiKey) {
+      setError('API key not found. Please set up your API key in settings.')
       return
     }
 
-    // Add user message to history
-    addUserMessage(message)
-
-    // Build messages array for API
-    const interviewState = useInterviewStore.getState()
-    const messages = interviewState.conversationHistory.map((msg) => ({
-      role: msg.role,
-      content: msg.content,
-    }))
-
-    // Add the new user message
-    messages.push({ role: 'user', content: message })
+    // Start streaming
+    interviewStore.startStreaming()
 
     try {
-      startStreaming()
+      const client = createAnthropicClient({ apiKey })
 
-      let streamedContent = ''
-
-      // Stream response from Anthropic (or mock mode)
-      await streamInterviewResponse(anthropicClient, {
+      const stream = client.messages.stream({
         model: 'claude-sonnet-4-6',
-        systemPrompt,
-        messages,
-        useMockMode: !anthropicClient, // Use mock mode if no client (null)
-        onToken: (token) => {
-          streamedContent += token
-          // Update the last assistant message in real-time
-          // (This is handled by the streaming state in the store)
-        },
-        onComplete: (fullMessage) => {
-          addAssistantMessage(fullMessage)
-          stopStreaming()
-        },
-        onDomainComplete: (domainId, content) => {
-          completeDomain(domainId, content)
-        },
-        onError: (err) => {
-          const errorMessage = getStreamErrorMessage(err)
-          setError(errorMessage)
-          stopStreaming()
-        },
+        max_tokens: 4096,
+        system: interviewStore.systemPrompt || '',
+        messages: interviewStore.conversationHistory.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        })),
       })
-    } catch (err) {
-      const errorMessage = getStreamErrorMessage(err)
-      setError(errorMessage)
-      stopStreaming()
+
+      let fullResponse = ''
+
+      for await (const chunk of stream) {
+        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+          fullResponse += chunk.delta.text
+          // Update streaming content in real-time
+          interviewStore.setStreamingContent(fullResponse)
+        }
+      }
+
+      // Add assistant message
+      interviewStore.addAssistantMessage(fullResponse)
+      interviewStore.stopStreaming()
+
+      // Check for domain completion
+      const currentDomain = interviewStore.currentDomain
+      if (currentDomain && detectDomainCompletion(fullResponse, currentDomain)) {
+        // Extract domain content (simplified - in production, parse properly)
+        interviewStore.completeDomain(currentDomain, fullResponse)
+
+        // Auto-save to Supabase
+        await saveInterviewData()
+      }
+    } catch (err: any) {
+      interviewStore.stopStreaming()
+      handleApiError(err)
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="text-sm text-muted-foreground">Initializing interview...</div>
-        </div>
-      </div>
-    )
+  // Auto-save interview data
+  const saveInterviewData = async () => {
+    const data = interviewStore.toJSON()
+
+    await fetch(`/api/projects/${projectId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        interview_data: data,
+        status: data.status === 'complete' ? 'complete' : 'in_progress',
+      }),
+    })
   }
 
-  if (error) {
+  // Handle API errors
+  const handleApiError = (error: any) => {
+    if (error.status === 401) {
+      setError('Invalid API key. Please update your key in settings.')
+    } else if (error.status === 429) {
+      setError('Rate limit exceeded. Please wait and try again.')
+    } else if (error.status === 402) {
+      setError('Quota exceeded. Please check your Anthropic account.')
+    } else {
+      setError('An error occurred. Please try again.')
+    }
+  }
+
+  // Get combined preview content
+  const getPreviewContent = () => {
+    const completedContent = Object.entries(interviewStore.domainContent)
+      .map(([domain, content]) => content)
+      .join('\n\n---\n\n')
+
+    return completedContent
+  }
+
+  if (!initialized) {
     return (
-      <div className="flex h-screen items-center justify-center p-4">
-        <div className="max-w-md space-y-4 text-center">
-          <div className="text-destructive">{error}</div>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Back to Dashboard
-          </button>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-stitch-stone">Loading interview...</div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar - Domain Progress */}
-      <div className="w-64 border-r border-border bg-muted/30 p-4">
-        <DomainProgress />
-      </div>
+    <div className="bg-stitch-background text-stitch-on-background font-stitch-body-md min-h-screen flex flex-col">
+      {/* Main Content Layout (3 Columns) */}
+      <main className="flex-grow flex flex-col md:flex-row w-full max-w-[1440px] mx-auto overflow-hidden">
+        {/* Left Column: Domain Progress */}
+        <DomainProgressPanel
+          completedDomains={interviewStore.completedDomains}
+          currentDomain={interviewStore.currentDomain}
+        />
 
-      {/* Main Content - Split Pane */}
-      <div className="flex flex-1">
-        {/* Left - Chat */}
-        <div className="w-1/2 border-r border-border">
-          <ChatPanel onSendMessage={handleSendMessage} />
-        </div>
+        {/* Center Column: Chat Interface */}
+        <ChatInterface
+          messages={interviewStore.conversationHistory}
+          onSendMessage={handleSendMessage}
+          isStreaming={interviewStore.isStreaming}
+          streamingContent={interviewStore.streamingContent}
+          disabled={!!error}
+          className="border-r border-stitch-parchment"
+        />
 
-        {/* Right - Preview */}
-        <div className="w-1/2 bg-muted/10">
-          <PreviewPanel />
+        {/* Right Column: Documentation Preview */}
+        <PreviewPanel
+          content={getPreviewContent()}
+          onCopy={() => {
+            navigator.clipboard.writeText(getPreviewContent())
+          }}
+        />
+      </main>
+
+      {/* Error Display */}
+      {error && (
+        <div className="fixed bottom-4 right-4 bg-stitch-error-container border border-stitch-terra-cotta p-4 rounded-stitch-DEFAULT max-w-md">
+          <p className="font-stitch-body-sm text-stitch-body-sm text-stitch-terra-cotta">
+            {error}
+          </p>
         </div>
-      </div>
+      )}
     </div>
   )
 }

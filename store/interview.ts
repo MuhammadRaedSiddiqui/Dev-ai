@@ -34,6 +34,7 @@ export interface InterviewState {
   // UI state
   isStreaming: boolean
   streamingContent: string
+  setStreamingContent: (content: string) => void
 
   // Actions
   initializeSession: (projectId: string, systemPrompt: string) => void
@@ -120,6 +121,10 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
     set({
       isStreaming: false,
     })
+  },
+
+  setStreamingContent: (content: string) => {
+    set({ streamingContent: content })
   },
 
   completeDomain: (domainId: DomainId, content: string) => {
