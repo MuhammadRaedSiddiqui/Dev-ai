@@ -4,8 +4,11 @@ import type { DomainId } from '@/lib/interview/domains'
 /**
  * Interview State Machine
  *
- * Manages the state of an AI interview session using Zustand.
- * Tracks current domain, completed domains, generated content, and conversation history.
+ * Manages the state of an AI planning interview session:
+ * - Current domain and completion status
+ * - Conversation history
+ * - Generated documentation content per domain
+ * - Streaming state
  */
 
 export interface Message {
@@ -15,23 +18,22 @@ export interface Message {
 }
 
 export interface InterviewState {
-  // Session state
+  // Session metadata
   projectId: string | null
-  status: 'idle' | 'interviewing' | 'complete'
+  systemPrompt: string | null
 
-  // Domain tracking
+  // Interview progress
+  status: 'idle' | 'interviewing' | 'complete'
   currentDomain: DomainId | null
   completedDomains: DomainId[]
 
-  // Generated content (keyed by domain ID)
-  domainContent: Record<string, string>
-
-  // Conversation history
+  // Content
+  domainContent: Record<DomainId, string>
   conversationHistory: Message[]
 
-  // Loading states
+  // UI state
   isStreaming: boolean
-  isSaving: boolean
+  streamingContent: string
 
   // Actions
   initializeSession: (projectId: string, systemPrompt: string) => void
@@ -40,99 +42,99 @@ export interface InterviewState {
   startStreaming: () => void
   stopStreaming: () => void
   completeDomain: (domainId: DomainId, content: string) => void
-  resumeFromSaved: (savedData: InterviewData) => void
+  resumeFromSaved: (savedState: Partial<InterviewState>) => void
   reset: () => void
-
-  // Serialization
-  toJSON: () => InterviewData
+  toJSON: () => InterviewStateJSON
 }
 
-export interface InterviewData {
-  status: 'idle' | 'interviewing' | 'complete'
+export interface InterviewStateJSON {
+  status: string
   currentDomain: DomainId | null
   completedDomains: DomainId[]
-  domainContent: Record<string, string>
-  conversationHistory: Message[]
+  domainContent: Record<DomainId, string>
+  conversationHistory: Array<{ role: string; content: string }>
+}
+
+const initialState = {
+  projectId: null,
+  systemPrompt: null,
+  status: 'idle' as const,
+  currentDomain: null,
+  completedDomains: [],
+  domainContent: {} as Record<DomainId, string>,
+  conversationHistory: [],
+  isStreaming: false,
+  streamingContent: '',
 }
 
 export const useInterviewStore = create<InterviewState>((set, get) => ({
-  // Initial state
-  projectId: null,
-  status: 'idle',
-  currentDomain: null,
-  completedDomains: [],
-  domainContent: {},
-  conversationHistory: [],
-  isStreaming: false,
-  isSaving: false,
+  ...initialState,
 
-  // Initialize a new interview session
   initializeSession: (projectId: string, systemPrompt: string) => {
     set({
       projectId,
+      systemPrompt,
       status: 'interviewing',
-      currentDomain: 'planning', // Start with first domain
+      currentDomain: 'planning',
       completedDomains: [],
-      domainContent: {},
+      domainContent: {} as Record<DomainId, string>,
       conversationHistory: [],
+      isStreaming: false,
+      streamingContent: '',
     })
   },
 
-  // Add user message to conversation
   addUserMessage: (content: string) => {
+    const message: Message = {
+      role: 'user',
+      content,
+      timestamp: Date.now(),
+    }
+
     set((state) => ({
-      conversationHistory: [
-        ...state.conversationHistory,
-        {
-          role: 'user',
-          content,
-          timestamp: Date.now(),
-        },
-      ],
+      conversationHistory: [...state.conversationHistory, message],
     }))
   },
 
-  // Add assistant message to conversation
   addAssistantMessage: (content: string) => {
+    const message: Message = {
+      role: 'assistant',
+      content,
+      timestamp: Date.now(),
+    }
+
     set((state) => ({
-      conversationHistory: [
-        ...state.conversationHistory,
-        {
-          role: 'assistant',
-          content,
-          timestamp: Date.now(),
-        },
-      ],
+      conversationHistory: [...state.conversationHistory, message],
+      streamingContent: '',
     }))
   },
 
-  // Start streaming indicator
   startStreaming: () => {
-    set({ isStreaming: true })
+    set({
+      isStreaming: true,
+      streamingContent: '',
+    })
   },
 
-  // Stop streaming indicator
   stopStreaming: () => {
-    set({ isStreaming: false })
+    set({
+      isStreaming: false,
+    })
   },
 
-  // Mark a domain as complete and store its content
   completeDomain: (domainId: DomainId, content: string) => {
-    const { completedDomains, currentDomain } = get()
+    const state = get()
 
-    // Add to completed domains if not already there
-    const newCompletedDomains = completedDomains.includes(domainId)
-      ? completedDomains
-      : [...completedDomains, domainId]
+    const completedDomains = state.completedDomains.includes(domainId)
+      ? state.completedDomains
+      : [...state.completedDomains, domainId]
 
-    // Store the generated content
-    const newDomainContent = {
-      ...get().domainContent,
+    const domainContent = {
+      ...state.domainContent,
       [domainId]: content,
     }
 
-    // Determine next domain
-    const domainOrder: DomainId[] = [
+    const allDomains: DomainId[] = [
       'planning',
       'architecture',
       'database',
@@ -145,46 +147,35 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
       'deployment',
     ]
 
-    const currentIndex = domainOrder.indexOf(domainId)
-    const nextDomain = currentIndex < domainOrder.length - 1 ? domainOrder[currentIndex + 1] : null
+    const currentIndex = allDomains.indexOf(domainId)
+    const nextDomain = currentIndex < allDomains.length - 1 ? allDomains[currentIndex + 1] : null
 
-    // Check if all domains are complete
-    const allComplete = newCompletedDomains.length === domainOrder.length
+    const isComplete = completedDomains.length === allDomains.length
 
     set({
-      completedDomains: newCompletedDomains,
-      domainContent: newDomainContent,
+      completedDomains,
+      domainContent,
       currentDomain: nextDomain,
-      status: allComplete ? 'complete' : 'interviewing',
+      status: isComplete ? 'complete' : 'interviewing',
     })
   },
 
-  // Resume from saved interview data
-  resumeFromSaved: (savedData: InterviewData) => {
+  resumeFromSaved: (savedState: Partial<InterviewState>) => {
     set({
-      status: savedData.status,
-      currentDomain: savedData.currentDomain,
-      completedDomains: savedData.completedDomains,
-      domainContent: savedData.domainContent,
-      conversationHistory: savedData.conversationHistory,
-    })
-  },
-
-  // Reset to initial state
-  reset: () => {
-    set({
-      projectId: null,
-      status: 'idle',
-      currentDomain: null,
-      completedDomains: [],
-      domainContent: {},
-      conversationHistory: [],
+      status: savedState.status || 'interviewing',
+      currentDomain: savedState.currentDomain || 'planning',
+      completedDomains: savedState.completedDomains || [],
+      domainContent: savedState.domainContent || ({} as Record<DomainId, string>),
+      conversationHistory: savedState.conversationHistory || [],
       isStreaming: false,
-      isSaving: false,
+      streamingContent: '',
     })
   },
 
-  // Serialize state to JSON for saving to Supabase
+  reset: () => {
+    set(initialState)
+  },
+
   toJSON: () => {
     const state = get()
     return {
@@ -192,7 +183,10 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
       currentDomain: state.currentDomain,
       completedDomains: state.completedDomains,
       domainContent: state.domainContent,
-      conversationHistory: state.conversationHistory,
+      conversationHistory: state.conversationHistory.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
     }
   },
 }))
