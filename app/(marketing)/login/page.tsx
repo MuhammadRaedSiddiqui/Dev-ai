@@ -1,62 +1,121 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/stitch/atoms/Button'
 import { Input } from '@/components/stitch/atoms/Input'
 import { FormField } from '@/components/stitch/molecules/FormField'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
 import Link from 'next/link'
+import { validateEmail, sanitizeInput, RateLimiter } from '@/lib/validation'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { showToast } = useToast()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const rateLimiter = useRef(new RateLimiter(2000))
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    // Rate limiting check
+    if (!rateLimiter.current.canSubmit()) {
+      const remaining = Math.ceil(rateLimiter.current.getRemainingTime() / 1000)
+      setError(`Please wait ${remaining} seconds before trying again`)
+      return
+    }
+
+    // Sanitize inputs
+    const sanitizedEmail = sanitizeInput(email)
+
+    // Validate email
+    const emailValidation = validateEmail(sanitizedEmail)
+    if (!emailValidation.isValid) {
+      setError(emailValidation.error || 'Invalid email')
+      return
+    }
+
+    // Basic password check (don't validate strength on login)
+    if (!password || password.length === 0) {
+      setError('Password is required')
+      return
+    }
+
+    if (password.length > 128) {
+      setError('Password is too long')
+      return
+    }
+
     setLoading(true)
 
     try {
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: sanitizedEmail,
         password,
       })
 
       if (error) {
-        setError(error.message)
+        setError('Invalid email or password')
       } else {
         router.push('/dashboard')
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   const handleGoogleLogin = async () => {
-    const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback`,
+        },
+      })
+      if (error) {
+        showToast({
+          message: 'Failed to sign in with Google',
+          type: 'error',
+        })
+      }
+    } catch (err) {
+      showToast({
+        message: 'Failed to sign in with Google',
+        type: 'error',
+      })
+    }
   }
 
   const handleGithubLogin = async () => {
-    const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback`,
+        },
+      })
+      if (error) {
+        showToast({
+          message: 'Failed to sign in with GitHub',
+          type: 'error',
+        })
+      }
+    } catch (err) {
+      showToast({
+        message: 'Failed to sign in with GitHub',
+        type: 'error',
+      })
+    }
   }
 
   return (
@@ -130,7 +189,7 @@ export default function LoginPage() {
               variant="primary"
               size="lg"
               loading={loading}
-              className="w-full font-medium"
+              className="w-full font-medium text-stitch-snow-white"
             >
               Sign in
             </Button>

@@ -1,22 +1,26 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useInterviewStore } from '@/store/interview'
-import { createClient as createAnthropicClient } from '@anthropic-ai/sdk'
+import Anthropic from '@anthropic-ai/sdk'
 import { DomainProgressPanel } from '@/components/stitch/organisms/DomainProgressPanel'
 import { ChatInterface } from '@/components/stitch/organisms/ChatInterface'
 import { PreviewPanel } from '@/components/stitch/organisms/PreviewPanel'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
 import { detectDomainCompletion } from '@/lib/interview/completion'
+import { validateTextInput, sanitizeInput, RateLimiter } from '@/lib/validation'
 
 export default function InterviewPage() {
   const params = useParams()
   const router = useRouter()
   const projectId = params.id as string
+  const { showToast } = useToast()
 
   const interviewStore = useInterviewStore()
   const [error, setError] = useState('')
   const [initialized, setInitialized] = useState(false)
+  const rateLimiter = useRef(new RateLimiter(1000))
 
   // Initialize session
   useEffect(() => {
@@ -61,8 +65,30 @@ export default function InterviewPage() {
   const handleSendMessage = async (content: string) => {
     setError('')
 
-    // Add user message
-    interviewStore.addUserMessage(content)
+    // Rate limiting check
+    if (!rateLimiter.current.canSubmit()) {
+      showToast({
+        message: 'Please wait a moment before sending another message',
+        type: 'error',
+      })
+      return
+    }
+
+    // Sanitize input
+    const sanitizedContent = sanitizeInput(content)
+
+    // Validate message content
+    const validation = validateTextInput(sanitizedContent, 1, 5000)
+    if (!validation.isValid) {
+      showToast({
+        message: validation.error || 'Invalid message',
+        type: 'error',
+      })
+      return
+    }
+
+    // Add user message with sanitized content
+    interviewStore.addUserMessage(sanitizedContent)
 
     // Get API key from localStorage
     const apiKey = localStorage.getItem('anthropic_api_key')
@@ -75,7 +101,7 @@ export default function InterviewPage() {
     interviewStore.startStreaming()
 
     try {
-      const client = createAnthropicClient({ apiKey })
+      const client = new Anthropic({ apiKey })
 
       const stream = client.messages.stream({
         model: 'claude-sonnet-4-6',
@@ -102,13 +128,22 @@ export default function InterviewPage() {
       interviewStore.stopStreaming()
 
       // Check for domain completion
-      const currentDomain = interviewStore.currentDomain
-      if (currentDomain && detectDomainCompletion(fullResponse, currentDomain)) {
-        // Extract domain content (simplified - in production, parse properly)
-        interviewStore.completeDomain(currentDomain, fullResponse)
+      const completionSignal = detectDomainCompletion(fullResponse)
+      if (completionSignal.detected && completionSignal.domainId) {
+        // Extract domain content
+        interviewStore.completeDomain(
+          completionSignal.domainId,
+          completionSignal.content || fullResponse
+        )
 
         // Auto-save to Supabase
         await saveInterviewData()
+
+        showToast({
+          message: `${completionSignal.domainId} section completed`,
+          type: 'success',
+          duration: 3000,
+        })
       }
     } catch (err: any) {
       interviewStore.stopStreaming()
@@ -132,15 +167,22 @@ export default function InterviewPage() {
 
   // Handle API errors
   const handleApiError = (error: any) => {
+    let message = 'An error occurred. Please try again.'
+
     if (error.status === 401) {
-      setError('Invalid API key. Please update your key in settings.')
+      message = 'Invalid API key. Please update your key in settings.'
     } else if (error.status === 429) {
-      setError('Rate limit exceeded. Please wait and try again.')
+      message = 'Rate limit exceeded. Please wait and try again.'
     } else if (error.status === 402) {
-      setError('Quota exceeded. Please check your Anthropic account.')
-    } else {
-      setError('An error occurred. Please try again.')
+      message = 'Quota exceeded. Please check your Anthropic account.'
     }
+
+    setError(message)
+    showToast({
+      message,
+      type: 'error',
+      duration: 5000,
+    })
   }
 
   // Get combined preview content
@@ -189,14 +231,6 @@ export default function InterviewPage() {
         />
       </main>
 
-      {/* Error Display */}
-      {error && (
-        <div className="fixed bottom-4 right-4 bg-stitch-error-container border border-stitch-terra-cotta p-4 rounded-stitch-DEFAULT max-w-md">
-          <p className="font-stitch-body-sm text-stitch-body-sm text-stitch-terra-cotta">
-            {error}
-          </p>
-        </div>
-      )}
     </div>
   )
 }

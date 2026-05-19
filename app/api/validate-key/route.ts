@@ -10,11 +10,39 @@ import type { NextRequest } from 'next/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { apiKey } = body
+    const { key } = body
 
-    if (!apiKey || typeof apiKey !== 'string') {
+    // Validate input exists and is a string
+    if (!key || typeof key !== 'string') {
       return NextResponse.json(
         { valid: false, error: 'API key is required', errorCode: 'INVALID_FORMAT' },
+        { status: 400 }
+      )
+    }
+
+    // Sanitize and validate format
+    const sanitizedKey = key.trim()
+
+    // Check key format
+    if (!sanitizedKey.startsWith('sk-ant-')) {
+      return NextResponse.json(
+        { valid: false, error: 'Invalid API key format', errorCode: 'INVALID_FORMAT' },
+        { status: 400 }
+      )
+    }
+
+    // Check length constraints
+    if (sanitizedKey.length < 40 || sanitizedKey.length > 200) {
+      return NextResponse.json(
+        { valid: false, error: 'Invalid API key length', errorCode: 'INVALID_FORMAT' },
+        { status: 400 }
+      )
+    }
+
+    // Check for valid characters only
+    if (!/^[a-zA-Z0-9-]+$/.test(sanitizedKey)) {
+      return NextResponse.json(
+        { valid: false, error: 'API key contains invalid characters', errorCode: 'INVALID_FORMAT' },
         { status: 400 }
       )
     }
@@ -23,7 +51,7 @@ export async function POST(request: NextRequest) {
     const { default: Anthropic } = await import('@anthropic-ai/sdk')
 
     const client = new Anthropic({
-      apiKey: apiKey.trim(),
+      apiKey: sanitizedKey,
     })
 
     // Make a minimal test call

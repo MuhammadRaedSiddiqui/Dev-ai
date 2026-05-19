@@ -1,34 +1,63 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/stitch/atoms/Button'
 import { Input } from '@/components/stitch/atoms/Input'
 import { FormField } from '@/components/stitch/molecules/FormField'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
 import Link from 'next/link'
+import {
+  validateEmail,
+  validatePassword,
+  validatePasswordMatch,
+  sanitizeInput,
+  RateLimiter,
+} from '@/lib/validation'
 
 export default function SignupPage() {
   const router = useRouter()
+  const { showToast } = useToast()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const rateLimiter = useRef(new RateLimiter(2000))
 
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
-    // Validate passwords match
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
+    // Rate limiting check
+    if (!rateLimiter.current.canSubmit()) {
+      const remaining = Math.ceil(rateLimiter.current.getRemainingTime() / 1000)
+      setError(`Please wait ${remaining} seconds before trying again`)
+      return
+    }
+
+    // Sanitize inputs
+    const sanitizedEmail = sanitizeInput(email)
+
+    // Validate email
+    const emailValidation = validateEmail(sanitizedEmail)
+    if (!emailValidation.isValid) {
+      setError(emailValidation.error || 'Invalid email')
       return
     }
 
     // Validate password strength
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters')
+    const passwordValidation = validatePassword(password)
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.error || 'Invalid password')
+      return
+    }
+
+    // Validate passwords match
+    const matchValidation = validatePasswordMatch(password, confirmPassword)
+    if (!matchValidation.isValid) {
+      setError(matchValidation.error || 'Passwords do not match')
       return
     }
 
@@ -37,7 +66,7 @@ export default function SignupPage() {
     try {
       const supabase = createClient()
       const { error } = await supabase.auth.signUp({
-        email,
+        email: sanitizedEmail,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/api/auth/callback`,
@@ -51,30 +80,56 @@ export default function SignupPage() {
         router.push('/signup/check-email')
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   const handleGoogleSignup = async () => {
-    const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback`,
+        },
+      })
+      if (error) {
+        showToast({
+          message: 'Failed to sign up with Google',
+          type: 'error',
+        })
+      }
+    } catch (err) {
+      showToast({
+        message: 'Failed to sign up with Google',
+        type: 'error',
+      })
+    }
   }
 
   const handleGithubSignup = async () => {
-    const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback`,
+        },
+      })
+      if (error) {
+        showToast({
+          message: 'Failed to sign up with GitHub',
+          type: 'error',
+        })
+      }
+    } catch (err) {
+      showToast({
+        message: 'Failed to sign up with GitHub',
+        type: 'error',
+      })
+    }
   }
 
   return (
@@ -112,7 +167,11 @@ export default function SignupPage() {
             </FormField>
 
             {/* Password Input */}
-            <FormField label="Password" labelStyle="caps" hint="At least 8 characters">
+            <FormField
+              label="Password"
+              labelStyle="caps"
+              hint="Must contain uppercase, lowercase, number, and special character"
+            >
               <Input
                 type="password"
                 name="password"
@@ -122,6 +181,7 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 error={!!error}
+                maxLength={128}
               />
             </FormField>
 
@@ -151,7 +211,7 @@ export default function SignupPage() {
               variant="primary"
               size="lg"
               loading={loading}
-              className="w-full font-medium"
+              className="w-full font-medium text-stitch-snow-white"
             >
               Create Account
             </Button>

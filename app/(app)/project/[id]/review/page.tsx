@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import { Button } from '@/components/stitch/atoms/Button'
 import { Icon } from '@/components/stitch/atoms/Icon'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { cn } from '@/lib/utils'
@@ -24,6 +25,7 @@ const DOCUMENTATION_FILES = [
 export default function ReviewPage() {
   const params = useParams()
   const projectId = params.id as string
+  const { showToast } = useToast()
 
   const [bundle, setBundle] = useState<any>(null)
   const [activeFile, setActiveFile] = useState('PLANNING.md')
@@ -41,16 +43,25 @@ export default function ReviewPage() {
           const data = await response.json()
           setBundle(data)
           setEditedContent(data.files || {})
+        } else {
+          showToast({
+            message: 'Failed to load documentation bundle',
+            type: 'error',
+          })
         }
       } catch (error) {
         console.error('Failed to load bundle:', error)
+        showToast({
+          message: 'Failed to load documentation bundle',
+          type: 'error',
+        })
       } finally {
         setLoading(false)
       }
     }
 
     loadBundle()
-  }, [projectId])
+  }, [projectId, showToast])
 
   // Debounced save
   const debouncedSave = useMemo(
@@ -86,6 +97,9 @@ export default function ReviewPage() {
     setExporting(true)
     try {
       const response = await fetch(`/api/export/${projectId}`)
+      if (!response.ok) {
+        throw new Error('Export failed')
+      }
       const blob = await response.blob()
 
       // Trigger download
@@ -95,8 +109,17 @@ export default function ReviewPage() {
       a.download = `devdocs-${projectId}.zip`
       a.click()
       window.URL.revokeObjectURL(url)
+
+      showToast({
+        message: 'Documentation exported successfully',
+        type: 'success',
+      })
     } catch (error) {
       console.error('Failed to export:', error)
+      showToast({
+        message: 'Failed to export documentation',
+        type: 'error',
+      })
     } finally {
       setExporting(false)
     }
@@ -118,10 +141,20 @@ export default function ReviewPage() {
 
         // Copy to clipboard
         await navigator.clipboard.writeText(shareUrl)
-        alert('Share link copied to clipboard!')
+        showToast({
+          message: 'Share link copied to clipboard',
+          type: 'success',
+          duration: 3000,
+        })
+      } else {
+        throw new Error('Failed to create share link')
       }
     } catch (error) {
       console.error('Failed to create share link:', error)
+      showToast({
+        message: 'Failed to create share link',
+        type: 'error',
+      })
     } finally {
       setSharing(false)
     }

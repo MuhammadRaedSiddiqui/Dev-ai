@@ -7,6 +7,8 @@ import { SideNavBar } from '@/components/stitch/organisms/SideNavBar'
 import { ProjectCard } from '@/components/stitch/molecules/ProjectCard'
 import { Button } from '@/components/stitch/atoms/Button'
 import { Icon } from '@/components/stitch/atoms/Icon'
+import { DashboardSkeleton } from '@/components/stitch/atoms/Skeleton'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
 
 interface Project {
   id: string
@@ -19,6 +21,7 @@ interface Project {
 
 export default function DashboardPage() {
   const router = useRouter()
+  const { showToast } = useToast()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -61,16 +64,38 @@ export default function DashboardPage() {
 
       if (response.ok) {
         // Remove from UI
+        const deletedProject = projects.find((p) => p.id === id)
         setProjects(projects.filter((p) => p.id !== id))
 
-        // TODO: Show undo toast
-        // For now, just refresh after a delay
-        setTimeout(() => {
-          fetchProjects()
-        }, 5000)
+        // Show undo toast
+        showToast({
+          message: 'Project deleted',
+          type: 'success',
+          duration: 5000,
+          action: {
+            label: 'Undo',
+            onClick: async () => {
+              // Restore project
+              await fetch(`/api/projects/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ deleted_at: null }),
+              })
+              fetchProjects()
+              showToast({
+                message: 'Project restored',
+                type: 'success',
+              })
+            },
+          },
+        })
       }
     } catch (error) {
       console.error('Failed to delete project:', error)
+      showToast({
+        message: 'Failed to delete project',
+        type: 'error',
+      })
     }
   }
 
@@ -122,9 +147,7 @@ export default function DashboardPage() {
 
         {/* Projects Grid */}
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Icon name="progress_activity" className="animate-spin text-stitch-stone" size="xl" />
-          </div>
+          <DashboardSkeleton />
         ) : projects.length === 0 ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-12 text-center">

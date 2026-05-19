@@ -1,11 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/stitch/atoms/Button'
 import { Input } from '@/components/stitch/atoms/Input'
 import { FormField } from '@/components/stitch/molecules/FormField'
 import { Icon } from '@/components/stitch/atoms/Icon'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
+import {
+  validateApiKey,
+  validateProjectName,
+  sanitizeInput,
+  RateLimiter,
+} from '@/lib/validation'
 
 const PROJECT_TYPES = [
   { id: 'saas', label: 'SaaS Application', icon: 'web' },
@@ -17,22 +24,35 @@ const PROJECT_TYPES = [
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const { showToast } = useToast()
   const [step, setStep] = useState(1)
   const [apiKey, setApiKey] = useState('')
   const [validating, setValidating] = useState(false)
   const [error, setError] = useState('')
+  const rateLimiter = useRef(new RateLimiter(3000))
 
   // Step 2 state
   const [projectName, setProjectName] = useState('')
   const [projectType, setProjectType] = useState('')
   const [creating, setCreating] = useState(false)
 
-  const validateApiKey = async () => {
+  const handleValidateApiKey = async () => {
     setError('')
 
-    // Client-side format validation
-    if (!apiKey.startsWith('sk-ant-')) {
-      setError('Invalid API key format. Key should start with sk-ant-')
+    // Rate limiting check
+    if (!rateLimiter.current.canSubmit()) {
+      const remaining = Math.ceil(rateLimiter.current.getRemainingTime() / 1000)
+      setError(`Please wait ${remaining} seconds before trying again`)
+      return
+    }
+
+    // Sanitize input
+    const sanitizedKey = sanitizeInput(apiKey)
+
+    // Validate API key format
+    const validation = validateApiKey(sanitizedKey)
+    if (!validation.isValid) {
+      setError(validation.error || 'Invalid API key format')
       return
     }
 
@@ -42,12 +62,16 @@ export default function OnboardingPage() {
       const response = await fetch('/api/validate-key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: apiKey }),
+        body: JSON.stringify({ key: sanitizedKey }),
       })
 
       if (response.ok) {
         // Store in localStorage only
-        localStorage.setItem('anthropic_api_key', apiKey)
+        localStorage.setItem('anthropic_api_key', sanitizedKey)
+        showToast({
+          message: 'API key validated successfully',
+          type: 'success',
+        })
         setStep(2)
       } else {
         const data = await response.json()
@@ -61,17 +85,31 @@ export default function OnboardingPage() {
   }
 
   const createProject = async () => {
-    if (!projectName.trim()) {
-      setError('Please enter a project name')
+    setError('')
+
+    // Sanitize project name
+    const sanitizedName = sanitizeInput(projectName)
+
+    // Validate project name
+    const nameValidation = validateProjectName(sanitizedName)
+    if (!nameValidation.isValid) {
+      setError(nameValidation.error || 'Invalid project name')
       return
     }
 
+    // Validate project type
     if (!projectType) {
       setError('Please select a project type')
       return
     }
 
-    setError('')
+    // Validate project type is in allowed list
+    const validTypes = PROJECT_TYPES.map((t) => t.id)
+    if (!validTypes.includes(projectType)) {
+      setError('Invalid project type selected')
+      return
+    }
+
     setCreating(true)
 
     try {
@@ -79,13 +117,17 @@ export default function OnboardingPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: projectName,
+          name: sanitizedName,
           project_type: projectType,
         }),
       })
 
       if (response.ok) {
         const { id } = await response.json()
+        showToast({
+          message: 'Project created successfully',
+          type: 'success',
+        })
         router.push(`/project/${id}/interview`)
       } else {
         const data = await response.json()
@@ -136,9 +178,10 @@ export default function OnboardingPage() {
                   error={!!error}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      validateApiKey()
+                      handleValidateApiKey()
                     }
                   }}
+                  maxLength={200}
                 />
               </FormField>
 
@@ -181,7 +224,7 @@ export default function OnboardingPage() {
                 <Button
                   variant="primary"
                   size="md"
-                  onClick={validateApiKey}
+                  onClick={handleValidateApiKey}
                   loading={validating}
                   disabled={!apiKey}
                   className="w-full sm:w-auto font-medium"
@@ -215,6 +258,8 @@ export default function OnboardingPage() {
                   placeholder="e.g., Quantum Analysis Engine"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
+                  maxLength={100}
+                  error={!!error}
                 />
               </FormField>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Lora } from 'next/font/google'
 import './globals.css'
+import { ToastProvider } from '@/components/stitch/organisms/ToastProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,7 +55,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${lora.variable} stitch-scope font-stitch-body-md text-stitch-body-md text-stitch-ink-black antialiased`}
       >
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   )

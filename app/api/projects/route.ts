@@ -2,6 +2,17 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 /**
+ * Sanitize string input to prevent XSS
+ */
+function sanitizeInput(input: string): string {
+  if (!input) return ''
+  // Remove HTML tags and trim
+  let sanitized = input.replace(/<[^>]*>/g, '')
+  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+  return sanitized.trim().slice(0, 1000)
+}
+
+/**
  * API Route: POST /api/projects
  *
  * Create a new project for the authenticated user.
@@ -26,23 +37,40 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { name, project_type } = body
 
-    // Validate input
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    // Validate and sanitize input
+    if (!name || typeof name !== 'string') {
       return NextResponse.json(
         { error: 'Project name is required', code: 'INVALID_INPUT' },
         { status: 400 }
       )
     }
 
-    if (name.trim().length > 100) {
+    const sanitizedName = sanitizeInput(name)
+
+    if (sanitizedName.length === 0) {
+      return NextResponse.json(
+        { error: 'Project name cannot be empty', code: 'INVALID_INPUT' },
+        { status: 400 }
+      )
+    }
+
+    if (sanitizedName.length < 3) {
+      return NextResponse.json(
+        { error: 'Project name must be at least 3 characters', code: 'INVALID_INPUT' },
+        { status: 400 }
+      )
+    }
+
+    if (sanitizedName.length > 100) {
       return NextResponse.json(
         { error: 'Project name must be 100 characters or less', code: 'INVALID_INPUT' },
         { status: 400 }
       )
     }
 
+    // Validate project type
     const validTypes = ['saas', 'api', 'internal_tool', 'mobile', 'landing_page', 'other']
-    if (!project_type || !validTypes.includes(project_type)) {
+    if (!project_type || typeof project_type !== 'string' || !validTypes.includes(project_type)) {
       return NextResponse.json(
         { error: 'Invalid project type', code: 'INVALID_INPUT' },
         { status: 400 }
@@ -74,12 +102,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create project
+    // Create project with sanitized name
     const { data: project, error: createError } = await supabase
       .from('projects')
       .insert({
         user_id: user.id,
-        name: name.trim(),
+        name: sanitizedName,
         project_type,
         status: 'in_progress',
         interview_data: {},

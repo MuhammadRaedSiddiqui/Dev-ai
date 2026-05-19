@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { SideNavBar } from '@/components/stitch/organisms/SideNavBar'
@@ -9,15 +9,19 @@ import { Input } from '@/components/stitch/atoms/Input'
 import { Toggle } from '@/components/stitch/atoms/Toggle'
 import { FormField } from '@/components/stitch/molecules/FormField'
 import { Breadcrumb } from '@/components/stitch/molecules/Breadcrumb'
+import { useToast } from '@/components/stitch/organisms/ToastProvider'
+import { validateApiKey, sanitizeInput, RateLimiter } from '@/lib/validation'
 
 export default function SettingsPage() {
   const router = useRouter()
+  const { showToast } = useToast()
   const [apiKey, setApiKey] = useState('')
   const [showApiKey, setShowApiKey] = useState(false)
   const [autoSave, setAutoSave] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const rateLimiter = useRef(new RateLimiter(3000))
 
   // Load settings on mount
   useEffect(() => {
@@ -36,29 +40,53 @@ export default function SettingsPage() {
     setError('')
     setSuccess('')
 
-    if (!apiKey.startsWith('sk-ant-')) {
-      setError('Invalid API key format')
+    // Rate limiting check
+    if (!rateLimiter.current.canSubmit()) {
+      const remaining = Math.ceil(rateLimiter.current.getRemainingTime() / 1000)
+      setError(`Please wait ${remaining} seconds before trying again`)
+      return
+    }
+
+    // Sanitize input
+    const sanitizedKey = sanitizeInput(apiKey)
+
+    // Validate API key format
+    const validation = validateApiKey(sanitizedKey)
+    if (!validation.isValid) {
+      setError(validation.error || 'Invalid API key')
       return
     }
 
     setUpdating(true)
 
     try {
-      // Validate the key
+      // Validate the key with the API
       const response = await fetch('/api/validate-key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: apiKey }),
+        body: JSON.stringify({ key: sanitizedKey }),
       })
 
       if (response.ok) {
-        localStorage.setItem('anthropic_api_key', apiKey)
+        localStorage.setItem('anthropic_api_key', sanitizedKey)
         setSuccess('API key updated successfully')
+        showToast({
+          message: 'API key updated successfully',
+          type: 'success',
+        })
       } else {
-        setError('Invalid API key')
+        setError('Invalid API key or API validation failed')
+        showToast({
+          message: 'Invalid API key',
+          type: 'error',
+        })
       }
     } catch (err) {
-      setError('Failed to validate API key')
+      setError('Failed to validate API key. Please try again.')
+      showToast({
+        message: 'Failed to validate API key',
+        type: 'error',
+      })
     } finally {
       setUpdating(false)
     }
@@ -67,6 +95,11 @@ export default function SettingsPage() {
   const handleAutoSaveToggle = (checked: boolean) => {
     setAutoSave(checked)
     localStorage.setItem('auto_save', checked.toString())
+    showToast({
+      message: `Auto-save ${checked ? 'enabled' : 'disabled'}`,
+      type: 'info',
+      duration: 2000,
+    })
   }
 
   const handleResetLocalStorage = () => {
@@ -125,6 +158,7 @@ export default function SettingsPage() {
                   placeholder="sk-ant-api03-..."
                   icon="key"
                   error={!!error}
+                  maxLength={200}
                 />
               </FormField>
 
