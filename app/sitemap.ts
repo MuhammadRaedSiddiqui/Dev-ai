@@ -2,25 +2,28 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://devdocs.ai'
+  const currentDate = new Date()
 
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/login`,
-      lastModified: new Date(),
+      lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/signup`,
-      lastModified: new Date(),
+      lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.6,
     },
+    // Public share links are dynamically generated, not included in sitemap
+    // Authenticated routes (dashboard, interview, review, settings) are excluded
   ]
 }

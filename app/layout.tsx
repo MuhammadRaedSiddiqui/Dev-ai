@@ -19,11 +19,22 @@ export const metadata: Metadata = {
   title: 'DevDocs AI — AI-Powered Pre-Build Planning Assistant',
   description:
     'Interview with AI before you code. Generate comprehensive 10-file documentation bundles covering architecture, database, API contracts, testing, and deployment.',
+  metadataBase: new URL('https://devdocs.ai'),
   openGraph: {
     title: 'DevDocs AI — AI-Powered Pre-Build Planning Assistant',
     description:
       'Interview with AI before you code. Get structured documentation instantly.',
     type: 'website',
+    url: 'https://devdocs.ai',
+    siteName: 'DevDocs AI',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@devdocsai',
+    creator: '@devdocsai',
+  },
+  verification: {
+    google: 'google-site-verification-code',
   },
 }
 

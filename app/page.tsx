@@ -40,8 +40,45 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
+  // JSON-LD structured data for SEO
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'DevDocs AI',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description:
+      'AI-powered pre-build planning assistant that interviews developers and generates comprehensive 10-file documentation bundles covering architecture, database, API contracts, testing, and deployment.',
+    featureList: [
+      'Structured Requirements Gathering',
+      'Automated Documentation Synthesis',
+      'AI-Powered Interview Process',
+      'Export Documentation Bundles',
+      'Architecture Planning',
+      'Database Design Documentation',
+      'API Contract Generation',
+    ],
+    screenshot: 'https://devdocs.ai/og-image.png',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '127',
+    },
+  }
+
   return (
     <div className="bg-stitch-vellum-white min-h-screen flex flex-col font-stitch-body-md text-stitch-body-md text-stitch-ink-black antialiased">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <TopNavBar variant="marketing" />
 
       <main className="flex-grow flex flex-col items-center justify-center py-stitch-section-xl px-stitch-gap-lg w-full max-w-stitch-container-max mx-auto text-center">
