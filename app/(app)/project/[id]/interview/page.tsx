@@ -3,12 +3,12 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useInterviewStore } from '@/store/interview'
-import Anthropic from '@anthropic-ai/sdk'
+import { createAIClient, getDefaultModel, getConfiguredProvider } from '@/lib/ai/factory'
+import { getStreamErrorMessage } from '@/lib/ai/streaming'
 import { DomainProgressPanel } from '@/components/stitch/organisms/DomainProgressPanel'
 import { ChatInterface } from '@/components/stitch/organisms/ChatInterface'
 import { PreviewPanel } from '@/components/stitch/organisms/PreviewPanel'
 import { useToast } from '@/components/stitch/organisms/ToastProvider'
-import { detectDomainCompletion } from '@/lib/interview/completion'
 import { validateTextInput, sanitizeInput, RateLimiter } from '@/lib/validation'
 
 export default function InterviewPage() {
@@ -90,64 +90,52 @@ export default function InterviewPage() {
     // Add user message with sanitized content
     interviewStore.addUserMessage(sanitizedContent)
 
-    // Get API key from localStorage
-    const apiKey = localStorage.getItem('anthropic_api_key')
-    if (!apiKey) {
-      setError('API key not found. Please set up your API key in settings.')
-      return
-    }
-
     // Start streaming
     interviewStore.startStreaming()
 
     try {
-      const client = new Anthropic({ apiKey })
+      // Create AI client using factory (supports Anthropic, Ollama, Mock)
+      const client = await createAIClient()
+      const provider = getConfiguredProvider()
 
-      const stream = client.messages.stream({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
-        system: interviewStore.systemPrompt || '',
-        messages: interviewStore.conversationHistory.map((msg) => ({
-          role: msg.role,
-          content: msg.content,
-        })),
-      })
-
-      let fullResponse = ''
-
-      for await (const chunk of stream) {
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          fullResponse += chunk.delta.text
+      // Stream response using unified interface
+      await client.stream({
+        model: getDefaultModel(provider),
+        systemPrompt: interviewStore.systemPrompt || '',
+        messages: interviewStore.conversationHistory,
+        maxTokens: 4096,
+        onToken: (token) => {
           // Update streaming content in real-time
-          interviewStore.setStreamingContent(fullResponse)
+          const currentContent = interviewStore.streamingContent + token
+          interviewStore.setStreamingContent(currentContent)
+        },
+        onComplete: (fullResponse) => {
+          // Add assistant message
+          interviewStore.addAssistantMessage(fullResponse)
+          interviewStore.stopStreaming()
+        },
+        onDomainComplete: async (domainId, content) => {
+          // Extract domain content
+          interviewStore.completeDomain(domainId, content)
+
+          // Auto-save to Supabase
+          await saveInterviewData()
+
+          showToast({
+            message: `${domainId} section completed`,
+            type: 'success',
+            duration: 3000,
+          })
+        },
+        onError: (error) => {
+          interviewStore.stopStreaming()
+          handleApiError(error, provider)
         }
-      }
-
-      // Add assistant message
-      interviewStore.addAssistantMessage(fullResponse)
-      interviewStore.stopStreaming()
-
-      // Check for domain completion
-      const completionSignal = detectDomainCompletion(fullResponse)
-      if (completionSignal.detected && completionSignal.domainId) {
-        // Extract domain content
-        interviewStore.completeDomain(
-          completionSignal.domainId,
-          completionSignal.content || fullResponse
-        )
-
-        // Auto-save to Supabase
-        await saveInterviewData()
-
-        showToast({
-          message: `${completionSignal.domainId} section completed`,
-          type: 'success',
-          duration: 3000,
-        })
-      }
+      })
     } catch (err: any) {
       interviewStore.stopStreaming()
-      handleApiError(err)
+      const provider = getConfiguredProvider()
+      handleApiError(err, provider)
     }
   }
 
@@ -166,16 +154,8 @@ export default function InterviewPage() {
   }
 
   // Handle API errors
-  const handleApiError = (error: any) => {
-    let message = 'An error occurred. Please try again.'
-
-    if (error.status === 401) {
-      message = 'Invalid API key. Please update your key in settings.'
-    } else if (error.status === 429) {
-      message = 'Rate limit exceeded. Please wait and try again.'
-    } else if (error.status === 402) {
-      message = 'Quota exceeded. Please check your Anthropic account.'
-    }
+  const handleApiError = (error: any, provider: string) => {
+    const message = getStreamErrorMessage(error, provider)
 
     setError(message)
     showToast({

@@ -7,6 +7,8 @@ import { Input } from '@/components/stitch/atoms/Input'
 import { FormField } from '@/components/stitch/molecules/FormField'
 import { Icon } from '@/components/stitch/atoms/Icon'
 import { useToast } from '@/components/stitch/organisms/ToastProvider'
+import ProviderSelect from '@/components/onboarding/ProviderSelect'
+import type { AIProvider } from '@/lib/ai/types'
 import {
   validateApiKey,
   validateProjectName,
@@ -26,15 +28,33 @@ export default function OnboardingPage() {
   const router = useRouter()
   const { showToast } = useToast()
   const [step, setStep] = useState(1)
+  const [provider, setProvider] = useState<AIProvider>('anthropic')
   const [apiKey, setApiKey] = useState('')
   const [validating, setValidating] = useState(false)
   const [error, setError] = useState('')
   const rateLimiter = useRef(new RateLimiter(3000))
 
-  // Step 2 state
+  // Project creation state
   const [projectName, setProjectName] = useState('')
   const [projectType, setProjectType] = useState('')
   const [creating, setCreating] = useState(false)
+
+  // Calculate total steps based on provider
+  const totalSteps = provider === 'anthropic' ? 3 : 2
+  const requiresApiKey = provider === 'anthropic'
+
+  const handleProviderSelect = (selectedProvider: AIProvider) => {
+    setProvider(selectedProvider)
+  }
+
+  const handleProviderContinue = () => {
+    // If provider doesn't require API key, skip to project creation
+    if (!requiresApiKey) {
+      setStep(2) // Go directly to project creation
+    } else {
+      setStep(2) // Go to API key input
+    }
+  }
 
   const handleValidateApiKey = async () => {
     setError('')
@@ -72,7 +92,7 @@ export default function OnboardingPage() {
           message: 'API key validated successfully',
           type: 'success',
         })
-        setStep(2)
+        setStep(3) // Go to project creation
       } else {
         const data = await response.json()
         setError(data.error || 'Invalid API key. Please check your credentials and try again.')
@@ -147,11 +167,46 @@ export default function OnboardingPage() {
         <div className="absolute top-0 left-8 right-8 h-[1px] bg-stitch-parchment"></div>
 
         {step === 1 ? (
-          /* Step 1: API Key Setup */
+          /* Step 1: Provider Selection */
           <>
             <div className="mb-stitch-section-xl">
               <span className="font-stitch-label-caps text-stitch-label-caps text-stitch-stone block mb-stitch-gap-xs">
-                Step 1 of 2
+                Step 1 of {totalSteps}
+              </span>
+              <h1 className="font-stitch-display text-stitch-display text-stitch-ink-black tracking-tight mb-4">
+                Select AI Provider
+              </h1>
+              <p className="font-stitch-body-lg text-stitch-body-lg text-stitch-on-surface-variant max-w-[480px]">
+                Choose the AI provider that will power your documentation interview.
+                Each option offers different capabilities and requirements.
+              </p>
+            </div>
+
+            <div className="space-y-stitch-gap-lg">
+              <ProviderSelect
+                onSelect={handleProviderSelect}
+                selectedProvider={provider}
+              />
+
+              {/* Actions */}
+              <div className="pt-stitch-gap-md flex justify-end border-t border-stitch-parchment mt-stitch-section-xl">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleProviderContinue}
+                  className="w-full sm:w-auto font-medium"
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : step === 2 && requiresApiKey ? (
+          /* Step 2: API Key Setup (Anthropic only) */
+          <>
+            <div className="mb-stitch-section-xl">
+              <span className="font-stitch-label-caps text-stitch-label-caps text-stitch-stone block mb-stitch-gap-xs">
+                Step 2 of {totalSteps}
               </span>
               <h1 className="font-stitch-display text-stitch-display text-stitch-ink-black tracking-tight mb-4">
                 Initialize Session
@@ -215,12 +270,14 @@ export default function OnboardingPage() {
 
               {/* Actions */}
               <div className="pt-stitch-gap-md flex flex-col-reverse sm:flex-row items-center justify-between gap-4 border-t border-stitch-parchment mt-stitch-section-xl">
-                <button
-                  type="button"
-                  className="font-stitch-body-sm text-stitch-body-sm text-stitch-stone hover:text-stitch-ink-black transition-colors px-4 py-2 border border-transparent hover:border-stitch-parchment rounded-stitch-DEFAULT w-full sm:w-auto text-center"
+                <Button
+                  variant="ghost"
+                  size="md"
+                  onClick={() => setStep(1)}
+                  className="w-full sm:w-auto"
                 >
-                  Proceed in Mock Mode
-                </button>
+                  Back
+                </Button>
                 <Button
                   variant="primary"
                   size="md"
@@ -235,11 +292,11 @@ export default function OnboardingPage() {
             </div>
           </>
         ) : (
-          /* Step 2: Project Creation */
+          /* Step 3 (or 2 for non-Anthropic): Project Creation */
           <>
             <div className="mb-stitch-section-xl">
               <span className="font-stitch-label-caps text-stitch-label-caps text-stitch-stone block mb-stitch-gap-xs">
-                Step 2 of 2
+                Step {requiresApiKey ? 3 : 2} of {totalSteps}
               </span>
               <h1 className="font-stitch-display text-stitch-display text-stitch-ink-black tracking-tight mb-4">
                 Create Your First Project
@@ -304,7 +361,7 @@ export default function OnboardingPage() {
                 <Button
                   variant="ghost"
                   size="md"
-                  onClick={() => setStep(1)}
+                  onClick={() => setStep(requiresApiKey ? 2 : 1)}
                   className="w-full sm:w-auto"
                 >
                   Back
