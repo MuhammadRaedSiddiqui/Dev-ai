@@ -1,54 +1,86 @@
-import type Anthropic from '@anthropic-ai/sdk'
 import type { AIClient, StreamConfig, ValidationResult } from '../types'
 import { detectDomainCompletion, extractMarkdownContent } from '@/lib/interview/completion'
 
 /**
  * Anthropic AI Provider
- * Wraps the Anthropic SDK with the unified AIClient interface
+ * Calls server-side API route to avoid bundling Node.js SDK in browser
  */
 export class AnthropicProvider implements AIClient {
   provider = 'anthropic' as const
-  private client: Anthropic
+  private apiKey: string
 
   constructor(apiKey: string) {
     if (!apiKey) {
       throw new Error('Anthropic API key is required')
     }
-
-    // Dynamic import to avoid bundling issues
-    const AnthropicSDK = require('@anthropic-ai/sdk').default
-    this.client = new AnthropicSDK({
-      apiKey,
-      dangerouslyAllowBrowser: true,
-    })
+    this.apiKey = apiKey
   }
 
   /**
-   * Stream a response from Anthropic API
+   * Stream a response from Anthropic API via server-side route
    */
   async stream(config: StreamConfig): Promise<string> {
     let fullMessage = ''
 
     try {
-      const stream = await this.client.messages.stream({
-        model: config.model,
-        max_tokens: config.maxTokens || 4096,
-        system: config.systemPrompt,
-        messages: config.messages,
+      // Call server-side streaming endpoint
+      const response = await fetch('/api/ai/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider: 'anthropic',
+          apiKey: this.apiKey,
+          model: config.model,
+          systemPrompt: config.systemPrompt,
+          messages: config.messages,
+          maxTokens: config.maxTokens || 4096,
+        }),
       })
 
-      // Process streaming tokens
-      for await (const chunk of stream) {
-        if (
-          chunk.type === 'content_block_delta' &&
-          chunk.delta.type === 'text_delta'
-        ) {
-          const token = chunk.delta.text
-          fullMessage += token
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Stream request failed')
+      }
 
-          // Call token callback for real-time UI updates
-          if (config.onToken) {
-            config.onToken(token)
+      // Process Server-Sent Events
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
+
+      if (!reader) {
+        throw new Error('No response body')
+      }
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        // Decode chunk and parse SSE format
+        const chunk = decoder.decode(value)
+        const lines = chunk.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = JSON.parse(line.slice(6))
+
+            if (data.error) {
+              throw new Error(data.error)
+            }
+
+            if (data.done) {
+              // Stream complete
+              break
+            }
+
+            if (data.token) {
+              fullMessage += data.token
+
+              // Call token callback for real-time UI updates
+              if (config.onToken) {
+                config.onToken(data.token)
+              }
+            }
           }
         }
       }
@@ -87,45 +119,49 @@ export class AnthropicProvider implements AIClient {
   }
 
   /**
-   * Validate connection to Anthropic API
+   * Validate connection to Anthropic API via server-side route
    */
   async validateConnection(): Promise<ValidationResult> {
     try {
-      // Make a minimal test call
-      await this.client.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 10,
-        messages: [{ role: 'user', content: 'test' }],
+      // Make a minimal test call through the server
+      const response = await fetch('/api/ai/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider: 'anthropic',
+          apiKey: this.apiKey,
+          model: 'claude-sonnet-4-6',
+          systemPrompt: '',
+          messages: [{ role: 'user', content: 'test' }],
+          maxTokens: 10,
+        }),
       })
+
+      if (!response.ok) {
+        const error = await response.json()
+        return {
+          valid: false,
+          error: error.error || 'Connection failed',
+          errorCode: this.getErrorCodeFromStatus(response.status),
+        }
+      }
 
       return { valid: true }
     } catch (error: unknown) {
       return {
         valid: false,
-        error: this.getErrorMessage(error),
-        errorCode: this.getErrorCode(error),
+        error: 'Network error',
+        errorCode: 'NETWORK_ERROR',
       }
     }
   }
 
-  private getErrorMessage(error: unknown): string {
-    if (error && typeof error === 'object' && 'status' in error) {
-      const status = (error as { status: number }).status
-      if (status === 401) return 'Invalid API key'
-      if (status === 429) return 'Rate limit exceeded'
-      if (status === 402 || status === 403) return 'Quota exceeded'
-      if (status >= 500) return 'Anthropic API error'
-    }
-    return 'Connection failed'
-  }
-
-  private getErrorCode(error: unknown): string {
-    if (error && typeof error === 'object' && 'status' in error) {
-      const status = (error as { status: number }).status
-      if (status === 401) return 'INVALID_KEY'
-      if (status === 429) return 'RATE_LIMITED'
-      if (status === 402 || status === 403) return 'QUOTA_EXCEEDED'
-    }
+  private getErrorCodeFromStatus(status: number): string {
+    if (status === 401) return 'INVALID_KEY'
+    if (status === 429) return 'RATE_LIMITED'
+    if (status === 402 || status === 403) return 'QUOTA_EXCEEDED'
     return 'NETWORK_ERROR'
   }
 }
