@@ -10,9 +10,10 @@ import type { NextRequest } from 'next/server'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { createClient } = await import('@/lib/supabase/server')
     const { buildZip } = await import('@/lib/export/zip')
     const { generateReadme } = await import('@/lib/export/readme')
@@ -33,7 +34,7 @@ export async function GET(
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .select('id, name, project_type, created_at')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (projectError || !project) {
@@ -47,7 +48,7 @@ export async function GET(
     const { data: bundle, error: bundleError } = await supabase
       .from('documentation_bundles')
       .select('files, generated_at')
-      .eq('project_id', params.id)
+      .eq('project_id', id)
       .order('version', { ascending: false })
       .limit(1)
       .single()

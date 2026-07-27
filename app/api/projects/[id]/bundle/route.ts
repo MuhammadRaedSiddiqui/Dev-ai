@@ -8,9 +8,10 @@ import type { NextRequest } from 'next/server'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { createClient } = await import('@/lib/supabase/server')
     const supabase = await createClient()
 
@@ -28,7 +29,7 @@ export async function GET(
     const { data: bundle, error: fetchError } = await supabase
       .from('documentation_bundles')
       .select('*')
-      .eq('project_id', params.id)
+      .eq('project_id', id)
       .order('version', { ascending: false })
       .limit(1)
       .single()
@@ -57,9 +58,10 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { createClient } = await import('@/lib/supabase/server')
     const supabase = await createClient()
 
@@ -108,7 +110,7 @@ export async function POST(
     const { data: existingBundle } = await supabase
       .from('documentation_bundles')
       .select('id, version')
-      .eq('project_id', params.id)
+      .eq('project_id', id)
       .order('version', { ascending: false })
       .limit(1)
       .single()
@@ -120,7 +122,7 @@ export async function POST(
       const { data, error } = await supabase
         .from('documentation_bundles')
         .insert({
-          project_id: params.id,
+          project_id: id,
           version: existingBundle.version + 1,
           files,
           model_used: model_used || 'claude-sonnet-4-6',
@@ -142,7 +144,7 @@ export async function POST(
       const { data, error } = await supabase
         .from('documentation_bundles')
         .insert({
-          project_id: params.id,
+          project_id: id,
           version: 1,
           files,
           model_used: model_used || 'claude-sonnet-4-6',

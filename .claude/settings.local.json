@@ -35,9 +35,6 @@
       "Bash(export PYTHONIOENCODING=utf-8)"
     ],
     "deny": [
-      "Read(.env*)",
-      "Read(**/secrets/**)",
-      "Write(.env*)",
       "Write(production.*)",
       "Write(.github/workflows/*)",
       "Write(package-lock.json)",

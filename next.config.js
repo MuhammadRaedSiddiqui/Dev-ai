@@ -15,6 +15,8 @@ const nextConfig = {
       bodySizeLimit: '2mb',
     },
   },
+  // Enable Turbopack (Next.js 16 default) while keeping webpack config for fallback
+  turbopack: {},
   webpack: (config, { isServer }) => {
     // Handle Anthropic SDK in browser context
     if (!isServer) {
